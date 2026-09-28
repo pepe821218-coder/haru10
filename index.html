@@ -360,6 +360,7 @@ const trackChip = t => t==="여행" ? '<span class="chip travel">여행</span>' 
 
 /* ============ 홈 ============ */
 let cur = null, timerId = null;
+function renderHomeKeep(){ const y = window.scrollY; renderHome(); window.scrollTo(0,y); }
 function renderHome(){
   cur = null; clearInterval(timerId); stopSpeak();
   const nx = nextLesson();
@@ -893,13 +894,13 @@ document.addEventListener("click", e=>{
   if (a==="week"){ viewWeek = +b.dataset.w; renderHome(); const el=document.getElementById("weekList"); if (el) el.scrollIntoView({block:"start"}); return; }
   if (a==="weekLocked"){ toast(((+b.dataset.w)-1)+"주차 5과를 모두 마치면 열립니다."); return; }
   if (a==="wrongReview") return openWrongReview();
-  if (a==="rate"){ P.settings.rate = parseFloat(b.dataset.v); save(); return renderHome(); }
-  if (a==="dark"){ P.settings.dark = !P.settings.dark; applyMode(); save(); return cur ? renderLessonKeep() : renderHome(); }
+  if (a==="rate"){ P.settings.rate = parseFloat(b.dataset.v); save(); return renderHomeKeep(); }
+  if (a==="dark"){ P.settings.dark = !P.settings.dark; applyMode(); save(); return cur ? renderLessonKeep() : renderHomeKeep(); }
   if (a==="listen") return startListen();
   if (a==="saveMe"){
     const g = id => (document.getElementById(id)||{}).value||"";
     P.me = { call:g("meCall").trim(), kname:g("meKname").trim(), first:g("meFirst").trim(), last:g("meLast").trim(), co:g("meCo").trim() };
-    save(); personalize(); renderHome(); toast("저장했습니다. 대화문에 반영됐습니다."); return;
+    save(); personalize(); renderHomeKeep(); toast("저장했습니다. 대화문에 반영됐습니다."); return;
   }
   if (a==="exportFile"){
     try{ const blob = new Blob([backupText()], {type:"application/json"}); const u = URL.createObjectURL(blob);
@@ -915,7 +916,7 @@ document.addEventListener("click", e=>{
     return;
   }
   if (a==="importText"){ try{ mergeImport(JSON.parse(document.getElementById("importText").value)); }catch(e){ toast("백업 코드 형식이 맞지 않습니다."); } return; }
-  if (a==="showKo"){ P.settings.showKo = !P.settings.showKo; save(); return renderHome(); }
+  if (a==="showKo"){ P.settings.showKo = !P.settings.showKo; save(); return renderHomeKeep(); }
   if (a==="testVoice") return playSeq([{en:"Hello. How can I help you today?", s:"A"},{en:"Hi. I'd like to practice English for ten minutes.", s:"B"}]);
   if (a==="sayText") return playSeq([{en:b.dataset.t, s:b.dataset.s||"B", key:b.dataset.key}], b.dataset.r?parseFloat(b.dataset.r):undefined);
   if (!cur) return;
