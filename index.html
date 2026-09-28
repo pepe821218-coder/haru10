@@ -211,121 +211,681 @@ body{-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px)}
 <script>
 /* ============ 콘텐츠: 1주차 ============ */
 const LESSONS_RAW = [
-{ id:"d1", day:"월", n:1, track:"여행", title:"공항 체크인", en:"At the Check-in Counter",
-  scene:"인천공항 항공사 카운터. 싱가포르행 비행기를 타기 전에 체크인을 합니다.",
-  goal:"목적지 말하기, 좌석 고르기, 짐 부치기",
-  roles:{A:"항공사 직원", B:"나"},
-  lines:[
-    {s:"A",en:"Good morning. Where are you flying today?",ko:"안녕하세요. 오늘 어디로 가세요?"},
-    {s:"B",en:"I'm flying to Singapore.",ko:"싱가포르로 갑니다."},
-    {s:"A",en:"May I see your passport, please?",ko:"여권 좀 보여주시겠어요?"},
-    {s:"B",en:"Here you are.",ko:"여기 있습니다."},
-    {s:"A",en:"Would you like a window or an aisle seat?",ko:"창가 좌석과 통로 좌석 중 어느 쪽이 좋으세요?"},
-    {s:"B",en:"A window seat, please.",ko:"창가 좌석으로 부탁합니다."},
-    {s:"A",en:"Do you have any bags to check?",ko:"부치실 짐이 있으세요?"},
-    {s:"B",en:"Just one bag.",ko:"가방 하나만요."}
+ {
+  "day": "월",
+  "track": "여행",
+  "title": "카페에서 음료 주문하기",
+  "en": "Ordering at a Café",
+  "scene": "여행지의 카페에서 원하는 음료를 주문하고 크기와 포장 여부를 말하는 상황입니다.",
+  "goal": "원하는 음료를 정중하게 주문하고 추가 요청을 말할 수 있다.",
+  "roles": {
+   "A": "카페 직원",
+   "B": "나"
+  },
+  "lines": [
+   {
+    "s": "A",
+    "en": "Hello. What can I get for you?",
+    "ko": "안녕하세요. 무엇을 드릴까요?"
+   },
+   {
+    "s": "B",
+    "en": "I'd like a hot latte, please.",
+    "ko": "따뜻한 라테 한 잔 부탁합니다."
+   },
+   {
+    "s": "A",
+    "en": "What size would you like?",
+    "ko": "어떤 크기로 드릴까요?"
+   },
+   {
+    "s": "B",
+    "en": "A medium, please.",
+    "ko": "중간 크기로 부탁합니다."
+   },
+   {
+    "s": "A",
+    "en": "Would you like anything else?",
+    "ko": "다른 것도 필요하신가요?"
+   },
+   {
+    "s": "B",
+    "en": "No, thank you. Can I get it to go?",
+    "ko": "아니요, 괜찮습니다. 포장해 주실 수 있나요?"
+   },
+   {
+    "s": "A",
+    "en": "Of course. That'll be five dollars.",
+    "ko": "물론입니다. 5달러입니다."
+   },
+   {
+    "s": "B",
+    "en": "Here you are. Thank you.",
+    "ko": "여기 있습니다. 감사합니다."
+   }
   ],
-  exps:[
-    {p:"I'm flying to ___.",ko:"(비행기로) ___에 갑니다.",subs:[["I'm flying to Tokyo.","도쿄에 갑니다."],["I'm flying to Hanoi.","하노이에 갑니다."],["I'm flying to Frankfurt.","프랑크푸르트에 갑니다."]]},
-    {p:"___, please.",ko:"___로 부탁합니다. (원하는 것 + please)",subs:[["An aisle seat, please.","통로 좌석으로 부탁합니다."],["Coffee, please.","커피로 부탁합니다."],["The bill, please.","계산서 부탁합니다."]]}
+  "exps": [
+   {
+    "p": "I'd like ___, please.",
+    "ko": "___ 부탁합니다. (원하는 것을 정중하게 주문)",
+    "subs": [
+     [
+      "I'd like an iced coffee, please.",
+      "아이스커피 한 잔 부탁합니다."
+     ],
+     [
+      "I'd like a cup of tea, please.",
+      "차 한 잔 부탁합니다."
+     ],
+     [
+      "I'd like a sandwich, please.",
+      "샌드위치 하나 부탁합니다."
+     ]
+    ]
+   },
+   {
+    "p": "Can I get ___?",
+    "ko": "___ 받을 수 있을까요? / ___ 해주실 수 있나요?",
+    "subs": [
+     [
+      "Can I get it to go?",
+      "포장해 주실 수 있나요?"
+     ],
+     [
+      "Can I get some water?",
+      "물 좀 받을 수 있을까요?"
+     ],
+     [
+      "Can I get an extra cup?",
+      "컵 하나 더 받을 수 있을까요?"
+     ]
+    ]
+   }
   ],
-  quiz:[
-    {id:"d1q1",q:"‘창가 좌석으로 부탁합니다’를 영어로?",o:["A window seat, please.","A window seat, thanks you.","Window, I want seat."],a:0,why:"원하는 것 뒤에 please만 붙이면 공손한 요청이 됩니다."},
-    {id:"d1q2",q:"빈칸: I'm ___ to Singapore.",o:["flying","fly","flew"],a:0,why:"I'm flying to ~ 는 ‘(비행기로) ~에 가요’라는 뜻의 고정 표현입니다."},
-    {id:"d1q3",q:"‘Do you have any bags to check?’의 뜻은?",o:["부치실 짐이 있으세요?","가방을 확인해도 될까요?","가방을 잃어버리셨나요?"],a:0,why:"공항에서 check a bag은 ‘짐을 부치다’입니다."}
-  ]
-},
-{ id:"d2", day:"화", n:2, track:"비즈니스", title:"자기소개", en:"Introducing Yourself",
-  scene:"해외 패널 공급업체 담당자와 처음 인사하는 자리입니다.",
-  goal:"이름·회사·담당 업무 소개하기",
-  roles:{A:"거래처 담당자 Emma", B:"나"},
-  lines:[
-    {s:"A",en:"Hi, I'm Emma Clark from Nordline Panels.",ko:"안녕하세요, 노드라인 패널의 엠마 클라크입니다."},
-    {s:"B",en:"Nice to meet you, Emma. I'm {FIRST} {LAST}.",ko:"만나서 반갑습니다, 엠마. 저는 {KNAME}입니다."},
-    {s:"A",en:"Nice to meet you, too. What do you do?",ko:"저도 반갑습니다. 어떤 일을 하세요?"},
-    {s:"B",en:"I work in purchasing at {CO}.",ko:"{CO}에서 구매 업무를 합니다."},
-    {s:"A",en:"Oh, so you buy the materials?",ko:"아, 그럼 자재를 구매하시는 거네요?"},
-    {s:"B",en:"Yes. I'm in charge of materials and subcontracts.",ko:"네. 자재와 외주 계약을 담당하고 있습니다."}
+  "quiz": [
+   {
+    "q": "따뜻한 라테를 정중하게 주문할 때 알맞은 문장은?",
+    "o": [
+     "I'd like a hot latte, please.",
+     "I hot latte yesterday.",
+     "Where is the hot latte?"
+    ],
+    "a": 0,
+    "why": "I'd like ___, please.는 원하는 것을 정중하게 주문할 때 씁니다.",
+    "id": "w1d1q1"
+   },
+   {
+    "q": "직원이 ‘What size would you like?’라고 물었습니다. 알맞은 대답은?",
+    "o": [
+     "It is very hot.",
+     "A medium, please.",
+     "I drink coffee."
+    ],
+    "a": 1,
+    "why": "크기를 묻는 질문이므로 크기로 답합니다.",
+    "id": "w1d1q2"
+   },
+   {
+    "q": "음료를 포장해 달라고 요청하는 문장은?",
+    "o": [
+     "Can I get it to go?",
+     "Can I sit here?",
+     "Can I see the menu?"
+    ],
+    "a": 0,
+    "why": "to go는 매장에서 먹지 않고 가지고 간다는 뜻입니다.",
+    "id": "w1d1q3"
+   }
   ],
-  exps:[
-    {p:"I work in ___.",ko:"___ 부서(분야)에서 일합니다.",subs:[["I work in purchasing.","구매 업무를 합니다."],["I work in sales.","영업 업무를 합니다."],["I work in accounting.","회계 업무를 합니다."]]},
-    {p:"I'm in charge of ___.",ko:"___을 담당하고 있습니다.",subs:[["I'm in charge of this project.","이 프로젝트를 담당하고 있습니다."],["I'm in charge of price negotiations.","가격 협상을 담당하고 있습니다."],["I'm in charge of quality control.","품질 관리를 담당하고 있습니다."]]}
+  "source": [
+   {
+    "name": "EBS English",
+    "url": "https://www.ebse.co.kr/apps/main/main.do"
+   }
   ],
-  quiz:[
-    {id:"d2q1",q:"‘저는 구매 업무를 합니다’를 영어로?",o:["I work in purchasing.","I work at purchasing.","I am work purchasing."],a:0,why:"부서·분야는 in, 회사는 at을 씁니다. (I work at {CO}.)"},
-    {id:"d2q2",q:"빈칸: I'm in ___ of materials.",o:["charge","change","chance"],a:0,why:"be in charge of ~ = ~을 담당하다."},
-    {id:"d2q3",q:"첫 만남에서 ‘What do you do?’의 뜻은?",o:["무슨 일을 하세요? (직업)","지금 뭐 하고 계세요?","어디 가세요?"],a:0,why:"What do you do? 는 직업이나 하는 일을 묻는 표현입니다."}
-  ]
-},
-{ id:"d3", day:"수", n:3, track:"여행", title:"호텔 체크인", en:"At the Front Desk",
-  scene:"싱가포르 호텔 프런트. 예약 확인을 하고 아침 식사 시간을 묻습니다.",
-  goal:"예약자 이름 말하기, 시간 묻기, 요청하기",
-  roles:{A:"호텔 직원", B:"나"},
-  lines:[
-    {s:"A",en:"Good evening. How can I help you?",ko:"안녕하세요. 무엇을 도와드릴까요?"},
-    {s:"B",en:"Hi, I have a reservation under {LAST}.",ko:"안녕하세요, {LAST} 이름으로 예약했습니다."},
-    {s:"A",en:"Let me check. Yes, a single room for three nights.",ko:"확인해 볼게요. 네, 싱글룸 3박이네요."},
-    {s:"B",en:"That's right. What time is breakfast?",ko:"맞아요. 아침 식사는 몇 시예요?"},
-    {s:"A",en:"From 6:30 to 10:00 on the second floor.",ko:"2층에서 6시 30분부터 10시까지입니다."},
-    {s:"B",en:"Great. Can I check out late?",ko:"좋네요. 늦게 체크아웃해도 될까요?"},
-    {s:"A",en:"Sure. Noon is fine.",ko:"네. 정오까지 괜찮습니다."}
+  "id": "d1",
+  "n": 1
+ },
+ {
+  "day": "화",
+  "track": "여행",
+  "title": "호텔에 체크인하기",
+  "en": "Checking In at a Hotel",
+  "scene": "호텔 프런트에서 예약자 이름을 말하고 여권을 보여준 뒤 조식 장소를 확인하는 상황입니다.",
+  "goal": "예약 정보를 전달하고 호텔 이용 정보를 질문할 수 있다.",
+  "roles": {
+   "A": "호텔 직원",
+   "B": "나"
+  },
+  "lines": [
+   {
+    "s": "A",
+    "en": "Good afternoon. How may I help you?",
+    "ko": "안녕하세요. 무엇을 도와드릴까요?"
+   },
+   {
+    "s": "B",
+    "en": "I'd like to check in, please.",
+    "ko": "체크인하고 싶습니다."
+   },
+   {
+    "s": "A",
+    "en": "May I have your name?",
+    "ko": "성함을 알려주시겠어요?"
+   },
+   {
+    "s": "B",
+    "en": "My name is {FIRST} {LAST}.",
+    "ko": "제 이름은 {KNAME}입니다."
+   },
+   {
+    "s": "A",
+    "en": "I found your reservation. May I see your passport?",
+    "ko": "예약을 확인했습니다. 여권을 보여주시겠어요?"
+   },
+   {
+    "s": "B",
+    "en": "Sure. Here it is. Where is breakfast served?",
+    "ko": "네, 여기 있습니다. 조식은 어디에서 먹나요?"
+   },
+   {
+    "s": "A",
+    "en": "Breakfast is served on the second floor.",
+    "ko": "조식은 2층에서 제공됩니다."
+   },
+   {
+    "s": "B",
+    "en": "Great. Thank you for your help.",
+    "ko": "좋습니다. 도와주셔서 감사합니다."
+   }
   ],
-  exps:[
-    {p:"I have a reservation under ___.",ko:"___ 이름으로 예약했습니다.",subs:[["I have a reservation under {LAST}.","{LAST} 이름으로 예약했습니다."],["I have a reservation under Lee.","이(Lee) 이름으로 예약했습니다."],["I have a reservation under {CO}.","회사 이름({CO})으로 예약했습니다."]]},
-    {p:"What time is ___?",ko:"___은 몇 시예요?",subs:[["What time is check-out?","체크아웃은 몇 시예요?"],["What time is the shuttle bus?","셔틀버스는 몇 시예요?"],["What time is the meeting?","회의는 몇 시예요?"]]}
+  "exps": [
+   {
+    "p": "I'd like to ___, please.",
+    "ko": "___하고 싶습니다. (하고 싶은 행동을 정중하게)",
+    "subs": [
+     [
+      "I'd like to check in, please.",
+      "체크인하고 싶습니다."
+     ],
+     [
+      "I'd like to leave my bags, please.",
+      "가방을 맡기고 싶습니다."
+     ],
+     [
+      "I'd like to change my room, please.",
+      "객실을 바꾸고 싶습니다."
+     ]
+    ]
+   },
+   {
+    "p": "Where is ___?",
+    "ko": "___은 어디에 있나요?",
+    "subs": [
+     [
+      "Where is the elevator?",
+      "엘리베이터는 어디에 있나요?"
+     ],
+     [
+      "Where is the breakfast room?",
+      "조식당은 어디에 있나요?"
+     ],
+     [
+      "Where is the nearest station?",
+      "가장 가까운 역은 어디에 있나요?"
+     ]
+    ]
+   }
   ],
-  quiz:[
-    {id:"d3q1",q:"‘아침 식사는 몇 시예요?’를 영어로?",o:["What time is breakfast?","What time breakfast is?","When time is breakfast?"],a:0,why:"의문문이라 What time 뒤에 is가 먼저 옵니다."},
-    {id:"d3q2",q:"빈칸: I have a reservation ___ {LAST}.",o:["under","on","at"],a:0,why:"‘~ 이름으로 예약’은 under + 이름을 씁니다."},
-    {id:"d3q3",q:"‘Can I check out late?’의 뜻은?",o:["늦게 체크아웃해도 될까요?","늦게 체크인해도 될까요?","체크아웃이 늦었나요?"],a:0,why:"Can I ~? 는 ‘~해도 될까요?’라고 허락을 구하는 표현입니다."}
-  ]
-},
-{ id:"d4", day:"목", n:4, track:"비즈니스", title:"명함 교환", en:"Exchanging Business Cards",
-  scene:"거래처 사무실을 방문해 명함을 주고받고 짧게 인사를 나눕니다.",
-  goal:"명함 건네기, 감사 인사, 제안에 답하기",
-  roles:{A:"거래처 담당자 Emma", B:"나"},
-  lines:[
-    {s:"A",en:"Welcome to our office. Did you find us easily?",ko:"저희 사무실에 오신 걸 환영합니다. 쉽게 찾으셨어요?"},
-    {s:"B",en:"Yes, thank you. Here's my business card.",ko:"네, 감사합니다. 제 명함입니다."},
-    {s:"A",en:"Thank you. Here's mine.",ko:"감사합니다. 제 명함도 받으세요."},
-    {s:"B",en:"Thank you for your time today.",ko:"오늘 시간 내주셔서 감사합니다."},
-    {s:"A",en:"My pleasure. Would you like some coffee?",ko:"별말씀을요. 커피 드시겠어요?"},
-    {s:"B",en:"Yes, please. That would be great.",ko:"네, 부탁드려요. 좋습니다."}
+  "quiz": [
+   {
+    "q": "호텔에서 체크인을 요청하는 문장은?",
+    "o": [
+     "I'd like to check in, please.",
+     "I'd like to order lunch.",
+     "I'd like to take a bus."
+    ],
+    "a": 0,
+    "why": "check in은 호텔에 도착해 투숙 절차를 밟는다는 뜻입니다.",
+    "id": "w1d2q1"
+   },
+   {
+    "q": "‘May I have your name?’에 알맞은 대답은?",
+    "o": [
+     "My name is {FIRST} {LAST}.",
+     "It is on the second floor.",
+     "Breakfast starts at seven."
+    ],
+    "a": 0,
+    "why": "이름을 묻는 질문이므로 영문 이름과 성으로 답합니다.",
+    "id": "w1d2q2"
+   },
+   {
+    "q": "엘리베이터 위치를 묻는 문장은?",
+    "o": [
+     "When is the elevator?",
+     "Where is the elevator?",
+     "Who is the elevator?"
+    ],
+    "a": 1,
+    "why": "장소나 위치는 Where로 묻습니다.",
+    "id": "w1d2q3"
+   }
   ],
-  exps:[
-    {p:"Here's my ___.",ko:"제 ___입니다. (건네면서)",subs:[["Here's my business card.","제 명함입니다."],["Here's my email address.","제 이메일 주소입니다."],["Here's our quotation.","저희 견적서입니다."]]},
-    {p:"Thank you for ___.",ko:"___해 주셔서 감사합니다.",subs:[["Thank you for your time.","시간 내주셔서 감사합니다."],["Thank you for the quick reply.","빠른 답변 감사합니다."],["Thank you for your help.","도와주셔서 감사합니다."]]}
+  "source": [
+   {
+    "name": "EBS English",
+    "url": "https://www.ebse.co.kr/apps/main/main.do"
+   }
   ],
-  quiz:[
-    {id:"d4q1",q:"‘제 명함입니다’를 영어로?",o:["Here's my business card.","This is my name paper.","Take my card name."],a:0,why:"물건을 건넬 때는 Here's my ~ 를 씁니다."},
-    {id:"d4q2",q:"빈칸: Thank you ___ your time.",o:["for","to","about"],a:0,why:"감사의 이유는 Thank you for ~ 로 말합니다."},
-    {id:"d4q3",q:"감사 인사에 ‘My pleasure.’라고 답하면?",o:["별말씀을요 / 천만에요","저는 즐거워요","제 차례예요"],a:0,why:"My pleasure.는 You're welcome.보다 조금 더 정중한 답입니다."}
-  ]
-},
-{ id:"d5", day:"금", n:5, track:"종합", title:"출장 첫날", en:"Day One in Singapore",
-  scene:"싱가포르 공항에 도착해 마중 나온 Emma를 만납니다. 이번 주 표현을 모두 씁니다.",
-  goal:"안부 묻기, 호텔 말하기, 미팅 시간 정하기",
-  roles:{A:"Emma", B:"나"},
-  lines:[
-    {s:"A",en:"{FIRST}? Hi, I'm Emma. Welcome to Singapore!",ko:"{FIRST} 씨? 안녕하세요, 엠마예요. 싱가포르에 오신 걸 환영해요!"},
-    {s:"B",en:"Hi, Emma. Nice to meet you in person.",ko:"안녕하세요, 엠마. 직접 뵙게 되어 반갑습니다."},
-    {s:"A",en:"How was your flight?",ko:"비행은 어떠셨어요?"},
-    {s:"B",en:"It was good. I had a window seat.",ko:"좋았어요. 창가 자리였어요."},
-    {s:"A",en:"Great. I'll take you to your hotel first.",ko:"잘됐네요. 먼저 호텔로 모셔다 드릴게요."},
-    {s:"B",en:"Thank you. I have a reservation at the Harbor Hotel.",ko:"감사합니다. 하버 호텔에 예약했어요."},
-    {s:"A",en:"What time is good for the meeting tomorrow?",ko:"내일 미팅은 몇 시가 좋으세요?"},
-    {s:"B",en:"10 a.m. works for me.",ko:"오전 10시가 괜찮습니다."}
+  "id": "d2",
+  "n": 2
+ },
+ {
+  "day": "수",
+  "track": "비즈니스",
+  "title": "처음 만난 협력사 담당자에게 소개하기",
+  "en": "Introducing Yourself at Work",
+  "scene": "해외 협력사 담당자를 처음 만나 이름과 소속 회사를 소개하고 담당 업무를 말하는 상황입니다.",
+  "goal": "이름과 회사, 부서를 소개하고 근무 기간을 말할 수 있다.",
+  "roles": {
+   "A": "해외 협력사 담당자 Daniel",
+   "B": "나"
+  },
+  "lines": [
+   {
+    "s": "A",
+    "en": "Hello. I'm Daniel from Bright Solutions.",
+    "ko": "안녕하세요. 브라이트 솔루션의 대니얼입니다."
+   },
+   {
+    "s": "B",
+    "en": "Nice to meet you. I'm {FIRST} {LAST} from {CO}.",
+    "ko": "만나서 반갑습니다. {CO}의 {KNAME}입니다."
+   },
+   {
+    "s": "A",
+    "en": "Nice to meet you, too. What do you do at {CO}?",
+    "ko": "저도 반갑습니다. {CO}에서 어떤 일을 하세요?"
+   },
+   {
+    "s": "B",
+    "en": "I work in the purchasing department.",
+    "ko": "구매 부서에서 일합니다."
+   },
+   {
+    "s": "A",
+    "en": "How long have you been with {CO}?",
+    "ko": "{CO}에서 일하신 지 얼마나 되셨어요?"
+   },
+   {
+    "s": "B",
+    "en": "I've been with {CO} for three years.",
+    "ko": "{CO}에서 3년째 일하고 있습니다."
+   },
+   {
+    "s": "A",
+    "en": "I look forward to working with you.",
+    "ko": "함께 일하게 되어 기대됩니다."
+   },
+   {
+    "s": "B",
+    "en": "Thank you. I look forward to working with you, too.",
+    "ko": "감사합니다. 저도 기대됩니다."
+   }
   ],
-  exps:[
-    {p:"How was ___?",ko:"___은 어땠어요?",subs:[["How was your flight?","비행은 어땠어요?"],["How was the meeting?","회의는 어땠어요?"],["How was your weekend?","주말은 어땠어요?"]]},
-    {p:"___ works for me.",ko:"저는 ___ 괜찮습니다.",subs:[["10 a.m. works for me.","오전 10시 괜찮습니다."],["Tuesday works for me.","화요일 괜찮습니다."],["That works for me.","그거 좋습니다."]]}
+  "exps": [
+   {
+    "p": "I'm ___ from ___.",
+    "ko": "___(소속)의 ___(이름)입니다. (이름 + from + 소속)",
+    "subs": [
+     [
+      "I'm {FIRST} {LAST} from {CO}.",
+      "{CO}의 {KNAME}입니다."
+     ],
+     [
+      "I'm {FIRST} from the Seoul office.",
+      "서울 사무소의 {FIRST}입니다."
+     ],
+     [
+      "I'm {FIRST} from the purchasing team.",
+      "구매팀의 {FIRST}입니다."
+     ]
+    ]
+   },
+   {
+    "p": "I work in ___.",
+    "ko": "___ 부서(분야)에서 일합니다.",
+    "subs": [
+     [
+      "I work in the purchasing department.",
+      "구매 부서에서 일합니다."
+     ],
+     [
+      "I work in sales.",
+      "영업 분야에서 일합니다."
+     ],
+     [
+      "I work in project management.",
+      "프로젝트 관리 분야에서 일합니다."
+     ]
+    ]
+   }
   ],
-  quiz:[
-    {id:"d5q1",q:"‘비행은 어떠셨어요?’를 영어로?",o:["How was your flight?","How is your fly?","What was flight?"],a:0,why:"지난 일의 소감은 How was ~? 로 묻습니다."},
-    {id:"d5q2",q:"빈칸: 10 a.m. ___ for me.",o:["works","work","working"],a:0,why:"시간이 주어라서 works입니다. ‘그 시간이 저한테 맞아요’라는 뜻입니다."},
-    {id:"d5q3",q:"‘Nice to meet you in person.’의 뜻은?",o:["직접 뵙게 되어 반갑습니다","사람을 만나서 반갑습니다","개인적으로 반갑지 않습니다"],a:0,why:"in person = 직접, 대면으로. 메일로만 연락하던 사람을 처음 만날 때 씁니다."}
-  ]
-}
+  "quiz": [
+   {
+    "q": "회사와 이름을 함께 소개하는 문장은?",
+    "o": [
+     "I'm {FIRST} {LAST} from {CO}.",
+     "Where is {CO}?",
+     "Please call {FIRST} tomorrow."
+    ],
+    "a": 0,
+    "why": "이름 + from + 회사명으로 이름과 소속을 함께 소개합니다.",
+    "id": "w1d3q1"
+   },
+   {
+    "q": "‘What do you do at {CO}?’의 뜻은?",
+    "o": [
+     "{CO}에서 어떤 일을 하세요?",
+     "{CO}까지 어떻게 가나요?",
+     "{CO}는 언제 문을 닫나요?"
+    ],
+    "a": 0,
+    "why": "직장 이야기에서 What do you do?는 담당 업무를 묻는 표현입니다.",
+    "id": "w1d3q2"
+   },
+   {
+    "q": "‘{CO}에서 3년째 일하고 있습니다’를 영어로?",
+    "o": [
+     "I've been with {CO} for three years.",
+     "I was {CO} three years.",
+     "I work {CO} since three years."
+    ],
+    "a": 0,
+    "why": "be with + 회사 = 그 회사 소속이다. 지금까지 이어지는 기간은 I've been ~ for 기간으로 말합니다.",
+    "id": "w1d3q3"
+   }
+  ],
+  "source": [
+   {
+    "name": "EBS English",
+    "url": "https://www.ebse.co.kr/apps/main/main.do"
+   }
+  ],
+  "id": "d3",
+  "n": 3
+ },
+ {
+  "day": "목",
+  "track": "비즈니스",
+  "title": "회의 일정 조정하기",
+  "en": "Scheduling a Meeting",
+  "scene": "업무 상대에게 회의 가능한 시간을 말하고, 서로 편한 시간으로 조정하는 상황입니다.",
+  "goal": "가능한 시간을 말하고 회의 일정을 정중하게 조정할 수 있다.",
+  "roles": {
+   "A": "업무 담당자",
+   "B": "나"
+  },
+  "lines": [
+   {
+    "s": "A",
+    "en": "Hello, {FIRST}. Do you have time for a meeting this week?",
+    "ko": "안녕하세요, {FIRST}. 이번 주에 회의할 시간 있으세요?"
+   },
+   {
+    "s": "B",
+    "en": "Yes. I'm available on Wednesday afternoon.",
+    "ko": "네. 수요일 오후에 됩니다."
+   },
+   {
+    "s": "A",
+    "en": "Would three o'clock work for you?",
+    "ko": "3시 괜찮으세요?"
+   },
+   {
+    "s": "B",
+    "en": "I'm sorry, but I have another meeting at three.",
+    "ko": "죄송하지만 3시에는 다른 회의가 있습니다."
+   },
+   {
+    "s": "A",
+    "en": "How about four o'clock?",
+    "ko": "4시는 어떠세요?"
+   },
+   {
+    "s": "B",
+    "en": "Four o'clock works for me.",
+    "ko": "4시 괜찮습니다."
+   },
+   {
+    "s": "A",
+    "en": "Great. I'll send you the meeting link.",
+    "ko": "좋습니다. 회의 링크를 보내드릴게요."
+   },
+   {
+    "s": "B",
+    "en": "Thank you. See you on Wednesday.",
+    "ko": "감사합니다. 수요일에 뵙겠습니다."
+   }
+  ],
+  "exps": [
+   {
+    "p": "I'm available ___.",
+    "ko": "___ 시간이 됩니다. (요일은 on, 시각은 at, ‘~ 이후’는 after)",
+    "subs": [
+     [
+      "I'm available on Monday morning.",
+      "월요일 오전에 됩니다."
+     ],
+     [
+      "I'm available after lunch.",
+      "점심 이후에 됩니다."
+     ],
+     [
+      "I'm available at four o'clock.",
+      "4시에 됩니다."
+     ]
+    ]
+   },
+   {
+    "p": "Would ___ work for you?",
+    "ko": "___ 괜찮으세요? (시간·방법을 정중하게 제안)",
+    "subs": [
+     [
+      "Would Tuesday work for you?",
+      "화요일 괜찮으세요?"
+     ],
+     [
+      "Would ten o'clock work for you?",
+      "10시 괜찮으세요?"
+     ],
+     [
+      "Would an online meeting work for you?",
+      "온라인 회의 괜찮으세요?"
+     ]
+    ]
+   }
+  ],
+  "quiz": [
+   {
+    "q": "수요일 오후에 시간이 된다고 말하는 문장은?",
+    "o": [
+     "I'm available on Wednesday afternoon.",
+     "I visited on Wednesday afternoon.",
+     "I finished Wednesday afternoon."
+    ],
+    "a": 0,
+    "why": "be available은 그 시간에 일정이 비어 있다는 뜻입니다.",
+    "id": "w1d4q1"
+   },
+   {
+    "q": "상대에게 3시가 괜찮은지 묻는 문장은?",
+    "o": [
+     "Did you finish at three?",
+     "Would three o'clock work for you?",
+     "Where is three o'clock?"
+    ],
+    "a": 1,
+    "why": "Would + 시간 + work for you?는 일정을 정중하게 제안하는 표현입니다.",
+    "id": "w1d4q2"
+   },
+   {
+    "q": "‘Four o'clock works for me.’의 뜻은?",
+    "o": [
+     "저는 4시에 퇴근합니다.",
+     "저는 4시간 동안 일합니다.",
+     "저는 4시가 괜찮습니다."
+    ],
+    "a": 2,
+    "why": "시간 + works for me는 그 시간이 나에게 맞는다는 뜻입니다.",
+    "id": "w1d4q3"
+   }
+  ],
+  "source": [
+   {
+    "name": "EBS English",
+    "url": "https://www.ebse.co.kr/apps/main/main.do"
+   }
+  ],
+  "id": "d4",
+  "n": 4
+ },
+ {
+  "day": "금",
+  "track": "종합",
+  "title": "문제를 설명하고 도움 요청하기",
+  "en": "Explaining a Problem and Asking for Help",
+  "scene": "출장 중 호텔 와이파이가 안 돼서, 온라인 회의 전에 직원에게 상황을 설명하고 해결을 요청하는 상황입니다.",
+  "goal": "간단한 문제를 설명하고 필요한 도움을 정중하게 요청할 수 있다.",
+  "roles": {
+   "A": "호텔 직원",
+   "B": "나"
+  },
+  "lines": [
+   {
+    "s": "A",
+    "en": "Good evening. How can I help you?",
+    "ko": "안녕하세요. 무엇을 도와드릴까요?"
+   },
+   {
+    "s": "B",
+    "en": "I'm having trouble with the Wi-Fi in my room.",
+    "ko": "객실 와이파이에 문제가 있습니다."
+   },
+   {
+    "s": "A",
+    "en": "I'm sorry to hear that. What seems to be the problem?",
+    "ko": "불편을 드려 죄송합니다. 어떤 문제인가요?"
+   },
+   {
+    "s": "B",
+    "en": "I can connect, but the internet isn't working.",
+    "ko": "연결은 되는데 인터넷이 안 됩니다."
+   },
+   {
+    "s": "A",
+    "en": "Could you restart your phone and try again?",
+    "ko": "휴대전화를 껐다 켠 뒤 다시 해보시겠어요?"
+   },
+   {
+    "s": "B",
+    "en": "I already tried that. Could someone check it, please?",
+    "ko": "이미 해봤습니다. 누가 좀 확인해 주실 수 있을까요?"
+   },
+   {
+    "s": "A",
+    "en": "Certainly. I'll send someone to your room.",
+    "ko": "물론입니다. 객실로 직원을 보내드리겠습니다."
+   },
+   {
+    "s": "B",
+    "en": "Thank you. I have an online meeting soon.",
+    "ko": "감사합니다. 곧 온라인 회의가 있어서요."
+   }
+  ],
+  "exps": [
+   {
+    "p": "I'm having trouble with ___.",
+    "ko": "___에 문제가 있습니다.",
+    "subs": [
+     [
+      "I'm having trouble with the Wi-Fi.",
+      "와이파이에 문제가 있습니다."
+     ],
+     [
+      "I'm having trouble with the air conditioner.",
+      "에어컨에 문제가 있습니다."
+     ],
+     [
+      "I'm having trouble with this payment.",
+      "이 결제에 문제가 있습니다."
+     ]
+    ]
+   },
+   {
+    "p": "Could someone ___, please?",
+    "ko": "누가 좀 ___해 주실 수 있을까요?",
+    "subs": [
+     [
+      "Could someone check it, please?",
+      "누가 좀 확인해 주실 수 있을까요?"
+     ],
+     [
+      "Could someone help me, please?",
+      "누가 좀 도와주실 수 있을까요?"
+     ],
+     [
+      "Could someone call a taxi, please?",
+      "누가 택시 좀 불러주실 수 있을까요?"
+     ]
+    ]
+   }
+  ],
+  "quiz": [
+   {
+    "q": "와이파이에 문제가 있다고 말하는 문장은?",
+    "o": [
+     "I'm having trouble with the Wi-Fi.",
+     "I'm meeting the Wi-Fi.",
+     "I'm ordering the Wi-Fi."
+    ],
+    "a": 0,
+    "why": "have trouble with ~는 ~에 문제가 있다, ~ 때문에 곤란하다는 뜻입니다.",
+    "id": "w1d5q1"
+   },
+   {
+    "q": "직원에게 확인을 정중하게 요청하는 문장은?",
+    "o": [
+     "You checked it yesterday.",
+     "Could someone check it, please?",
+     "Someone is checking out."
+    ],
+    "a": 1,
+    "why": "Could someone ___, please?는 도움을 정중하게 요청할 때 씁니다.",
+    "id": "w1d5q2"
+   },
+   {
+    "q": "‘I already tried that.’의 뜻은?",
+    "o": [
+     "이미 그것을 해봤습니다.",
+     "나중에 그것을 하겠습니다.",
+     "그것을 처음 봤습니다."
+    ],
+    "a": 0,
+    "why": "already는 이미 끝낸 일을 말할 때 씁니다.",
+    "id": "w1d5q3"
+   }
+  ],
+  "source": [
+   {
+    "name": "EBS English",
+    "url": "https://www.ebse.co.kr/apps/main/main.do"
+   }
+  ],
+  "id": "d5",
+  "n": 5
+ }
 ];
 const REVIEW = { id:"d6", day:"토", n:6, track:"복습", title:"주간 복습", en:"Weekly Review", review:true };
 let LESSONS = [], ALLQ = [];
@@ -339,8 +899,8 @@ function personalize(){
 }
 
 const ROADMAP = [
-  {stage:"1단계 기초", range:"1~4주", weeks:[["여행: 공항·호텔","비즈: 자기소개·명함"],["여행: 길 묻기","비즈: 전화 받기"],["여행: 스몰토크","비즈: 전화 걸기·메시지"],["1단계 총정리",""]]},
-  {stage:"2단계 실전", range:"5~8주", weeks:[["여행: 식당 주문","비즈: 회의 일정 잡기"],["여행: 쇼핑·환불","비즈: 이메일 표현"],["여행: 교통 이용","비즈: 견적 요청"],["여행: 문제 생겼을 때","비즈: 가격·조건 문의"]]},
+  {stage:"1단계 기초", range:"1~4주", weeks:[["여행: 카페 주문·호텔 체크인","비즈: 자기소개·회의 일정"],["여행: 길 묻기","비즈: 전화 받기"],["여행: 스몰토크","비즈: 전화 걸기·메시지"],["1단계 총정리",""]]},
+  {stage:"2단계 실전", range:"5~8주", weeks:[["여행: 식당 주문","비즈: 회의 진행·요약"],["여행: 쇼핑·환불","비즈: 이메일 표현"],["여행: 교통 이용","비즈: 견적 요청"],["여행: 문제 생겼을 때","비즈: 가격·조건 문의"]]},
   {stage:"3단계 중급", range:"9~12주", weeks:[["여행: 투어 예약","비즈: 가격 협상"],["여행: 불만 제기","비즈: 납기 조율"],["여행: 현지인과 대화","비즈: 의견 말하기"],["3단계 총정리","비즈: 짧은 발표"]]}
 ];
 
@@ -350,6 +910,14 @@ let P = { done:{}, wrong:[], days:[], settings:{rate:0.85, showKo:true, dark:fal
 try { const s = JSON.parse(localStorage.getItem(LS_KEY)||"null"); if (s && s.done) P = Object.assign(P, s, {settings:Object.assign(P.settings, s.settings||{})}); } catch(e){}
 function applyMode(){ document.documentElement.setAttribute("data-mode", P.settings.dark ? "dark" : "light"); const m=document.getElementById("themeColor"); if(m) m.setAttribute("content", P.settings.dark ? "#000000" : "#FFFFFF"); }
 applyMode();
+const CONTENT_VER = "w1-v2";
+if (P.contentVer !== CONTENT_VER){
+  const hadOld = Object.keys(P.done||{}).length || (P.wrong||[]).length;
+  P.done = {}; P.wrong = [];
+  P.contentVer = CONTENT_VER;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(P)); } catch(e){}
+  if (hadOld) setTimeout(()=>toast("1주차 교육 내용이 새로 바뀌어 과 완료 기록을 초기화했습니다. 출석 기록은 그대로입니다."), 600);
+}
 function save(){
   P.updatedAt = Date.now();
   try { localStorage.setItem(LS_KEY, JSON.stringify(P)); } catch(e){ toast("저장 공간에 기록하지 못했습니다. 사파리 개인정보 보호 모드인지 확인해 주세요."); }
@@ -406,7 +974,7 @@ function markPlaying(key){
 const $app = document.getElementById("app");
 const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const PLAY = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>';
-const pat = p => esc(p).replace("___", "<u>&nbsp;___&nbsp;</u>");
+const pat = p => esc(p).split("___").join("<u>&nbsp;___&nbsp;</u>");
 function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function weekDays(){ const d=new Date(); const dow=(d.getDay()+6)%7; const mon=new Date(d); mon.setDate(d.getDate()-dow); const out=[]; for(let i=0;i<7;i++){const x=new Date(mon); x.setDate(mon.getDate()+i); out.push(x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"));} return out; }
 function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -744,8 +1312,10 @@ function startListen(){
 function mergeImport(obj){
   if (!obj || typeof obj!=="object" || !obj.days || !obj.done) throw new Error("형식");
   P.days = Array.from(new Set([...(P.days||[]), ...obj.days])).sort();
-  P.done = Object.assign({}, obj.done, P.done);
-  P.wrong = Array.from(new Set([...(P.wrong||[]), ...(obj.wrong||[])]));
+  if (obj.contentVer === CONTENT_VER){
+    P.done = Object.assign({}, obj.done, P.done);
+    P.wrong = Array.from(new Set([...(P.wrong||[]), ...(obj.wrong||[])]));
+  }
   if (obj.me && !(P.me && P.me.first)) P.me = obj.me;
   save(); personalize(); renderHome(); toast("백업을 불러와 기록을 합쳤습니다.");
 }
