@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>하루10 영어회화</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="하루10">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFFFFF" id="themeColor">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF; --card:#FFFFFF; --ink:#000000; --muted:#333333; --line:#D4D4D4;
+  --accent:#0A6C7E; --accent-ink:#FFFFFF; --accent-soft:#E6F2F4; --stamp:#9A6200; --stamp-soft:#FBF1DE;
+  --good:#1F6B3E; --good-soft:#E3F2E8; --bad:#A3321F; --bad-soft:#F8E5E1;
+  --shadow:0 1px 2px rgba(0,0,0,.05); --fill:#F2F2F2;
+  --sans:"IBM Plex Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+:root[data-mode="dark"]{
+  color-scheme:dark;
+  --paper:#000000; --card:#121212; --ink:#FFFFFF; --muted:#CCCCCC; --line:#3A3A3A;
+  --accent:#4DB3C4; --accent-ink:#000000; --accent-soft:#12323A; --stamp:#E3AA4C; --stamp-soft:#33270F;
+  --good:#62BE88; --good-soft:#12301D; --bad:#EE8573; --bad-soft:#3A1A15;
+  --shadow:none; --fill:#1E1E1E;
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper)}
+body{font-family:var(--sans);color:var(--ink);font-size:16px;line-height:1.55;-webkit-tap-highlight-color:transparent}
+#app{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:12px 120px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.3}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:10px}
+.mono{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;font-size:11.5px;font-weight:600}
+.muted{color:var(--muted)}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.sec{margin-top:28px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.sec-h h2{font-size:17px;font-weight:700}
+
+/* home header */
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:6px 14px}
+.brand{font-weight:700;font-size:15px}
+.brand b{color:var(--accent)}
+.hello{font-size:22px;font-weight:700;margin-bottom:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.stat .n{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .l{font-size:12px;color:var(--muted)}
+
+/* ticket */
+.ticket{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.ticket .t-main{padding:18px 18px 16px}
+.ticket .t-stub{padding:14px 18px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.perf{position:relative;height:0;border-top:2px dashed var(--line);margin:0 14px}
+.perf::before,.perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--paper);border:1px solid var(--line)}
+.perf::before{left:-24px}.perf::after{right:-24px}
+.t-code{display:flex;gap:8px;align-items:center;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600;white-space:nowrap}
+.chip.travel{background:var(--accent-soft);color:var(--accent)}
+.chip.biz{background:var(--stamp-soft);color:var(--stamp)}
+.chip.done{background:var(--good-soft);color:var(--good)}
+.chip.wait{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.chip.today{background:var(--ink);color:var(--paper)}
+.modebtn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:600}
+.t-title{font-size:24px;font-weight:700;margin-top:10px}
+.t-en{color:var(--muted);font-size:15px;margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--card);border:1px solid var(--line)}
+.btn.soft{background:var(--accent-soft);color:var(--accent)}
+.btn.block{width:100%}
+.btn svg{width:14px;height:14px;flex:none}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sm{min-height:38px;padding:0 14px;font-size:14px;border-radius:10px}
+
+/* week strip */
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.wd .dot{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--muted);background:var(--card)}
+.wd.done .dot{background:var(--good);border-color:var(--good);color:#fff}
+.wd.next .dot{border-color:var(--accent);color:var(--accent)}
+.wd.rest .dot{border-style:dashed}
+
+/* lesson list */
+.lrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;text-align:left;width:100%}
+.lrow .day{font-family:var(--mono);font-weight:600;font-size:12px;color:var(--muted);width:30px;flex:none}
+.lrow .tx{flex:1;min-width:0}
+.lrow .tt{font-weight:600}
+.lrow .te{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* roadmap */
+.stage{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.stage-h{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.stage-h b{font-size:15px}
+.wk{display:grid;grid-template-columns:44px 1fr auto;gap:8px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.wk:last-child{border-bottom:0}
+.wk .wn{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--muted)}
+.wk.cur{background:var(--accent-soft)}
+
+/* settings */
+.setting{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:14px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);background:var(--fill);border-radius:10px;padding:3px;gap:3px}
+.seg button{min-height:38px;border-radius:8px;font-size:14px;font-weight:500;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:700;box-shadow:var(--shadow)}
+.switch{width:50px;height:30px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.switch[aria-checked="true"]{background:var(--accent)}
+.switch[aria-checked="true"]::after{transform:translateX(20px)}
+.note{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* lesson */
+.lbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);margin-inline:-16px;padding:10px 16px 10px}
+.lbar .row{justify-content:space-between}
+.back{display:inline-flex;align-items:center;gap:4px;font-weight:600;min-height:40px;padding-right:8px}
+.timer{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:14px;font-weight:600;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.prog{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:8px}
+.prog i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.steplabel{margin-top:8px;display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.steplabel b{color:var(--ink)}
+.stitle{font-size:22px;font-weight:700;margin:14px 0 4px}
+.sdesc{color:var(--muted);font-size:14px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.scene-em{font-size:26px;font-weight:700;line-height:1.25}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:15px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:500}
+
+.line{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--line);transition:border-color .15s,background .15s}
+.line.me{background:var(--accent-soft);border-color:transparent}
+.line.playing{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.spk{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:600;background:var(--fill);color:var(--ink)}
+.line.me .spk{background:var(--accent);color:var(--accent-ink)}
+.en{font-size:17px;font-weight:600;line-height:1.4}
+.ko{font-size:14px;color:var(--muted);margin-top:2px}
+.ctrls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:14px;color:var(--muted)}
+
+.exp{display:flex;flex-direction:column;gap:12px}
+.pattern{font-size:22px;font-weight:700;line-height:1.3}
+.pattern u{text-decoration:none;border-bottom:3px solid var(--stamp);padding-inline:2px}
+.sub{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--fill);width:100%;text-align:left}
+.play{flex:none;width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.play svg{width:14px;height:14px}
+
+.shadow-big{font-size:24px;font-weight:700;line-height:1.35}
+.reps{display:flex;gap:10px;justify-content:center;margin:18px 0 6px}
+.rep{width:18px;height:18px;border-radius:50%;border:2px solid var(--line)}
+.rep.on{background:var(--good);border-color:var(--good)}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+
+.hint{border:2px dashed var(--accent);background:var(--card)}
+.reveal{margin-top:10px}
+
+.q-prompt{font-size:19px;font-weight:700;line-height:1.4}
+.opt{width:100%;text-align:left;padding:14px;border-radius:12px;background:var(--card);border:2px solid var(--line);font-size:16px;font-weight:500}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.fb{padding:12px 14px;border-radius:12px;font-size:14px}
+.fb.good{background:var(--good-soft);color:var(--good)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb b{display:block;font-size:15px;margin-bottom:2px}
+
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--paper);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+.bottom .in{max-width:520px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:10px}
+
+.stamp{width:150px;height:150px;border-radius:50%;border:4px double var(--stamp);color:var(--stamp);display:grid;place-items:center;margin:30px auto 10px;transform:rotate(-8deg);text-align:center}
+.stamp b{display:block;font-size:30px;font-family:var(--mono);letter-spacing:.08em}
+.stamp span{font-family:var(--mono);font-size:11px;letter-spacing:.1em}
+@media (prefers-reduced-motion:no-preference){ .stamp{animation:thump .45s ease-out} @keyframes thump{from{transform:rotate(-8deg) scale(1.4);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:1}} }
+.att{border:2px solid var(--accent);border-radius:16px;padding:18px;background:var(--card)}
+.att-h{font-size:30px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+.att-h small{font-size:15px;font-weight:600;color:var(--muted);margin-left:6px}
+.att-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.att-grid div{background:var(--fill);border-radius:10px;padding:10px}
+.att-grid b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.att-grid span{font-size:12px;color:var(--muted)}
+.meter{height:10px;border-radius:99px;background:var(--fill);overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.banner{padding:10px 12px;border-radius:10px;background:var(--stamp-soft);color:var(--ink);font-size:13px}
+html,body{margin:0}
+body{-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px)}
+.safe-cover{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:30}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:13px;color:var(--muted)}
+.field input,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sr-words{font-size:18px;font-weight:600;line-height:1.6}
+.sr-words .ok{color:var(--good)}
+.sr-words .miss{color:var(--bad);text-decoration:underline;text-decoration-thickness:2px}
+.listening{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.6}}
+</style>
+</head>
+<body>
+<div class="safe-cover"></div>
+
+<div id="app"></div>
+
+<script>
+/* ============ 콘텐츠: 1주차 ============ */
+const LESSONS_RAW = [
+{ id:"d1", day:"월", n:1, track:"여행", title:"공항 체크인", en:"At the Check-in Counter",
+  scene:"인천공항 항공사 카운터. 싱가포르행 비행기를 타기 전에 체크인을 합니다.",
+  goal:"목적지 말하기, 좌석 고르기, 짐 부치기",
+  roles:{A:"항공사 직원", B:"나"},
+  lines:[
+    {s:"A",en:"Good morning. Where are you flying today?",ko:"안녕하세요. 오늘 어디로 가세요?"},
+    {s:"B",en:"I'm flying to Singapore.",ko:"싱가포르로 갑니다."},
+    {s:"A",en:"May I see your passport, please?",ko:"여권 좀 보여주시겠어요?"},
+    {s:"B",en:"Here you are.",ko:"여기 있습니다."},
+    {s:"A",en:"Would you like a window or an aisle seat?",ko:"창가 좌석과 통로 좌석 중 어느 쪽이 좋으세요?"},
+    {s:"B",en:"A window seat, please.",ko:"창가 좌석으로 부탁합니다."},
+    {s:"A",en:"Do you have any bags to check?",ko:"부치실 짐이 있으세요?"},
+    {s:"B",en:"Just one bag.",ko:"가방 하나만요."}
+  ],
+  exps:[
+    {p:"I'm flying to ___.",ko:"(비행기로) ___에 갑니다.",subs:[["I'm flying to Tokyo.","도쿄에 갑니다."],["I'm flying to Hanoi.","하노이에 갑니다."],["I'm flying to Frankfurt.","프랑크푸르트에 갑니다."]]},
+    {p:"___, please.",ko:"___로 부탁합니다. (원하는 것 + please)",subs:[["An aisle seat, please.","통로 좌석으로 부탁합니다."],["Coffee, please.","커피로 부탁합니다."],["The bill, please.","계산서 부탁합니다."]]}
+  ],
+  quiz:[
+    {id:"d1q1",q:"‘창가 좌석으로 부탁합니다’를 영어로?",o:["A window seat, please.","A window seat, thanks you.","Window, I want seat."],a:0,why:"원하는 것 뒤에 please만 붙이면 공손한 요청이 됩니다."},
+    {id:"d1q2",q:"빈칸: I'm ___ to Singapore.",o:["flying","fly","flew"],a:0,why:"I'm flying to ~ 는 ‘(비행기로) ~에 가요’라는 뜻의 고정 표현입니다."},
+    {id:"d1q3",q:"‘Do you have any bags to check?’의 뜻은?",o:["부치실 짐이 있으세요?","가방을 확인해도 될까요?","가방을 잃어버리셨나요?"],a:0,why:"공항에서 check a bag은 ‘짐을 부치다’입니다."}
+  ]
+},
+{ id:"d2", day:"화", n:2, track:"비즈니스", title:"자기소개", en:"Introducing Yourself",
+  scene:"해외 패널 공급업체 담당자와 처음 인사하는 자리입니다.",
+  goal:"이름·회사·담당 업무 소개하기",
+  roles:{A:"거래처 담당자 Emma", B:"나"},
+  lines:[
+    {s:"A",en:"Hi, I'm Emma Clark from Nordline Panels.",ko:"안녕하세요, 노드라인 패널의 엠마 클라크입니다."},
+    {s:"B",en:"Nice to meet you, Emma. I'm {FIRST} {LAST}.",ko:"만나서 반갑습니다, 엠마. 저는 {KNAME}입니다."},
+    {s:"A",en:"Nice to meet you, too. What do you do?",ko:"저도 반갑습니다. 어떤 일을 하세요?"},
+    {s:"B",en:"I work in purchasing at {CO}.",ko:"{CO}에서 구매 업무를 합니다."},
+    {s:"A",en:"Oh, so you buy the materials?",ko:"아, 그럼 자재를 구매하시는 거네요?"},
+    {s:"B",en:"Yes. I'm in charge of materials and subcontracts.",ko:"네. 자재와 외주 계약을 담당하고 있습니다."}
+  ],
+  exps:[
+    {p:"I work in ___.",ko:"___ 부서(분야)에서 일합니다.",subs:[["I work in purchasing.","구매 업무를 합니다."],["I work in sales.","영업 업무를 합니다."],["I work in accounting.","회계 업무를 합니다."]]},
+    {p:"I'm in charge of ___.",ko:"___을 담당하고 있습니다.",subs:[["I'm in charge of this project.","이 프로젝트를 담당하고 있습니다."],["I'm in charge of price negotiations.","가격 협상을 담당하고 있습니다."],["I'm in charge of quality control.","품질 관리를 담당하고 있습니다."]]}
+  ],
+  quiz:[
+    {id:"d2q1",q:"‘저는 구매 업무를 합니다’를 영어로?",o:["I work in purchasing.","I work at purchasing.","I am work purchasing."],a:0,why:"부서·분야는 in, 회사는 at을 씁니다. (I work at {CO}.)"},
+    {id:"d2q2",q:"빈칸: I'm in ___ of materials.",o:["charge","change","chance"],a:0,why:"be in charge of ~ = ~을 담당하다."},
+    {id:"d2q3",q:"첫 만남에서 ‘What do you do?’의 뜻은?",o:["무슨 일을 하세요? (직업)","지금 뭐 하고 계세요?","어디 가세요?"],a:0,why:"What do you do? 는 직업이나 하는 일을 묻는 표현입니다."}
+  ]
+},
+{ id:"d3", day:"수", n:3, track:"여행", title:"호텔 체크인", en:"At the Front Desk",
+  scene:"싱가포르 호텔 프런트. 예약 확인을 하고 아침 식사 시간을 묻습니다.",
+  goal:"예약자 이름 말하기, 시간 묻기, 요청하기",
+  roles:{A:"호텔 직원", B:"나"},
+  lines:[
+    {s:"A",en:"Good evening. How can I help you?",ko:"안녕하세요. 무엇을 도와드릴까요?"},
+    {s:"B",en:"Hi, I have a reservation under {LAST}.",ko:"안녕하세요, {LAST} 이름으로 예약했습니다."},
+    {s:"A",en:"Let me check. Yes, a single room for three nights.",ko:"확인해 볼게요. 네, 싱글룸 3박이네요."},
+    {s:"B",en:"That's right. What time is breakfast?",ko:"맞아요. 아침 식사는 몇 시예요?"},
+    {s:"A",en:"From 6:30 to 10:00 on the second floor.",ko:"2층에서 6시 30분부터 10시까지입니다."},
+    {s:"B",en:"Great. Can I check out late?",ko:"좋네요. 늦게 체크아웃해도 될까요?"},
+    {s:"A",en:"Sure. Noon is fine.",ko:"네. 정오까지 괜찮습니다."}
+  ],
+  exps:[
+    {p:"I have a reservation under ___.",ko:"___ 이름으로 예약했습니다.",subs:[["I have a reservation under {LAST}.","{LAST} 이름으로 예약했습니다."],["I have a reservation under Lee.","이(Lee) 이름으로 예약했습니다."],["I have a reservation under {CO}.","회사 이름({CO})으로 예약했습니다."]]},
+    {p:"What time is ___?",ko:"___은 몇 시예요?",subs:[["What time is check-out?","체크아웃은 몇 시예요?"],["What time is the shuttle bus?","셔틀버스는 몇 시예요?"],["What time is the meeting?","회의는 몇 시예요?"]]}
+  ],
+  quiz:[
+    {id:"d3q1",q:"‘아침 식사는 몇 시예요?’를 영어로?",o:["What time is breakfast?","What time breakfast is?","When time is breakfast?"],a:0,why:"의문문이라 What time 뒤에 is가 먼저 옵니다."},
+    {id:"d3q2",q:"빈칸: I have a reservation ___ {LAST}.",o:["under","on","at"],a:0,why:"‘~ 이름으로 예약’은 under + 이름을 씁니다."},
+    {id:"d3q3",q:"‘Can I check out late?’의 뜻은?",o:["늦게 체크아웃해도 될까요?","늦게 체크인해도 될까요?","체크아웃이 늦었나요?"],a:0,why:"Can I ~? 는 ‘~해도 될까요?’라고 허락을 구하는 표현입니다."}
+  ]
+},
+{ id:"d4", day:"목", n:4, track:"비즈니스", title:"명함 교환", en:"Exchanging Business Cards",
+  scene:"거래처 사무실을 방문해 명함을 주고받고 짧게 인사를 나눕니다.",
+  goal:"명함 건네기, 감사 인사, 제안에 답하기",
+  roles:{A:"거래처 담당자 Emma", B:"나"},
+  lines:[
+    {s:"A",en:"Welcome to our office. Did you find us easily?",ko:"저희 사무실에 오신 걸 환영합니다. 쉽게 찾으셨어요?"},
+    {s:"B",en:"Yes, thank you. Here's my business card.",ko:"네, 감사합니다. 제 명함입니다."},
+    {s:"A",en:"Thank you. Here's mine.",ko:"감사합니다. 제 명함도 받으세요."},
+    {s:"B",en:"Thank you for your time today.",ko:"오늘 시간 내주셔서 감사합니다."},
+    {s:"A",en:"My pleasure. Would you like some coffee?",ko:"별말씀을요. 커피 드시겠어요?"},
+    {s:"B",en:"Yes, please. That would be great.",ko:"네, 부탁드려요. 좋습니다."}
+  ],
+  exps:[
+    {p:"Here's my ___.",ko:"제 ___입니다. (건네면서)",subs:[["Here's my business card.","제 명함입니다."],["Here's my email address.","제 이메일 주소입니다."],["Here's our quotation.","저희 견적서입니다."]]},
+    {p:"Thank you for ___.",ko:"___해 주셔서 감사합니다.",subs:[["Thank you for your time.","시간 내주셔서 감사합니다."],["Thank you for the quick reply.","빠른 답변 감사합니다."],["Thank you for your help.","도와주셔서 감사합니다."]]}
+  ],
+  quiz:[
+    {id:"d4q1",q:"‘제 명함입니다’를 영어로?",o:["Here's my business card.","This is my name paper.","Take my card name."],a:0,why:"물건을 건넬 때는 Here's my ~ 를 씁니다."},
+    {id:"d4q2",q:"빈칸: Thank you ___ your time.",o:["for","to","about"],a:0,why:"감사의 이유는 Thank you for ~ 로 말합니다."},
+    {id:"d4q3",q:"감사 인사에 ‘My pleasure.’라고 답하면?",o:["별말씀을요 / 천만에요","저는 즐거워요","제 차례예요"],a:0,why:"My pleasure.는 You're welcome.보다 조금 더 정중한 답입니다."}
+  ]
+},
+{ id:"d5", day:"금", n:5, track:"종합", title:"출장 첫날", en:"Day One in Singapore",
+  scene:"싱가포르 공항에 도착해 마중 나온 Emma를 만납니다. 이번 주 표현을 모두 씁니다.",
+  goal:"안부 묻기, 호텔 말하기, 미팅 시간 정하기",
+  roles:{A:"Emma", B:"나"},
+  lines:[
+    {s:"A",en:"{FIRST}? Hi, I'm Emma. Welcome to Singapore!",ko:"{FIRST} 씨? 안녕하세요, 엠마예요. 싱가포르에 오신 걸 환영해요!"},
+    {s:"B",en:"Hi, Emma. Nice to meet you in person.",ko:"안녕하세요, 엠마. 직접 뵙게 되어 반갑습니다."},
+    {s:"A",en:"How was your flight?",ko:"비행은 어떠셨어요?"},
+    {s:"B",en:"It was good. I had a window seat.",ko:"좋았어요. 창가 자리였어요."},
+    {s:"A",en:"Great. I'll take you to your hotel first.",ko:"잘됐네요. 먼저 호텔로 모셔다 드릴게요."},
+    {s:"B",en:"Thank you. I have a reservation at the Harbor Hotel.",ko:"감사합니다. 하버 호텔에 예약했어요."},
+    {s:"A",en:"What time is good for the meeting tomorrow?",ko:"내일 미팅은 몇 시가 좋으세요?"},
+    {s:"B",en:"10 a.m. works for me.",ko:"오전 10시가 괜찮습니다."}
+  ],
+  exps:[
+    {p:"How was ___?",ko:"___은 어땠어요?",subs:[["How was your flight?","비행은 어땠어요?"],["How was the meeting?","회의는 어땠어요?"],["How was your weekend?","주말은 어땠어요?"]]},
+    {p:"___ works for me.",ko:"저는 ___ 괜찮습니다.",subs:[["10 a.m. works for me.","오전 10시 괜찮습니다."],["Tuesday works for me.","화요일 괜찮습니다."],["That works for me.","그거 좋습니다."]]}
+  ],
+  quiz:[
+    {id:"d5q1",q:"‘비행은 어떠셨어요?’를 영어로?",o:["How was your flight?","How is your fly?","What was flight?"],a:0,why:"지난 일의 소감은 How was ~? 로 묻습니다."},
+    {id:"d5q2",q:"빈칸: 10 a.m. ___ for me.",o:["works","work","working"],a:0,why:"시간이 주어라서 works입니다. ‘그 시간이 저한테 맞아요’라는 뜻입니다."},
+    {id:"d5q3",q:"‘Nice to meet you in person.’의 뜻은?",o:["직접 뵙게 되어 반갑습니다","사람을 만나서 반갑습니다","개인적으로 반갑지 않습니다"],a:0,why:"in person = 직접, 대면으로. 메일로만 연락하던 사람을 처음 만날 때 씁니다."}
+  ]
+}
+];
+const REVIEW = { id:"d6", day:"토", n:6, track:"복습", title:"주간 복습", en:"Weekly Review", review:true };
+let LESSONS = [], ALLQ = [];
+const ME_DEFAULT = {call:"", kname:"김민수", first:"Minsu", last:"Kim", co:"ABC Construction"};
+function personalize(){
+  const me = Object.assign({}, ME_DEFAULT, P.me||{});
+  const map = {"{FIRST}":me.first||ME_DEFAULT.first, "{LAST}":me.last||ME_DEFAULT.last, "{CO}":me.co||ME_DEFAULT.co, "{KNAME}":me.kname||ME_DEFAULT.kname};
+  let j = JSON.stringify(LESSONS_RAW);
+  for (const k in map) j = j.split(k).join(JSON.stringify(String(map[k])).slice(1,-1));
+  LESSONS = JSON.parse(j); ALLQ = LESSONS.flatMap(l=>l.quiz);
+}
+
+const ROADMAP = [
+  {stage:"1단계 기초", range:"1~4주", weeks:[["여행: 공항·호텔","비즈: 자기소개·명함"],["여행: 길 묻기","비즈: 전화 받기"],["여행: 스몰토크","비즈: 전화 걸기·메시지"],["1단계 총정리",""]]},
+  {stage:"2단계 실전", range:"5~8주", weeks:[["여행: 식당 주문","비즈: 회의 일정 잡기"],["여행: 쇼핑·환불","비즈: 이메일 표현"],["여행: 교통 이용","비즈: 견적 요청"],["여행: 문제 생겼을 때","비즈: 가격·조건 문의"]]},
+  {stage:"3단계 중급", range:"9~12주", weeks:[["여행: 투어 예약","비즈: 가격 협상"],["여행: 불만 제기","비즈: 납기 조율"],["여행: 현지인과 대화","비즈: 의견 말하기"],["3단계 총정리","비즈: 짧은 발표"]]}
+];
+
+/* ============ 저장 ============ */
+const LS_KEY = "eng10.progress.v1";
+let P = { done:{}, wrong:[], days:[], settings:{rate:0.85, showKo:true, dark:false}, me:{}, updatedAt:0 };
+try { const s = JSON.parse(localStorage.getItem(LS_KEY)||"null"); if (s && s.done) P = Object.assign(P, s, {settings:Object.assign(P.settings, s.settings||{})}); } catch(e){}
+function applyMode(){ document.documentElement.setAttribute("data-mode", P.settings.dark ? "dark" : "light"); const m=document.getElementById("themeColor"); if(m) m.setAttribute("content", P.settings.dark ? "#000000" : "#FFFFFF"); }
+applyMode();
+function save(){
+  P.updatedAt = Date.now();
+  try { localStorage.setItem(LS_KEY, JSON.stringify(P)); } catch(e){ toast("저장 공간에 기록하지 못했습니다. 사파리 개인정보 보호 모드인지 확인해 주세요."); }
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch(e){}
+personalize();
+
+/* ============ 음성(TTS) ============ */
+const hasTTS = "speechSynthesis" in window;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+let voices = [], playToken = 0;
+function loadVoices(){ if(!hasTTS) return; voices = speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang)); }
+if (hasTTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function pickVoice(role){
+  if (!voices.length) return null;
+  const us = voices.filter(v=>/en[-_]US/i.test(v.lang));
+  const pool = us.length ? us : voices;
+  const pref = pool.find(v=>/Samantha|Google US English|Aria|Jenny/i.test(v.name)) || pool[0];
+  if (role === "A"){ const other = pool.find(v=>v !== pref && /male|Daniel|Alex|Guy|Fred|Aaron/i.test(v.name)) || pool.find(v=>v!==pref); return other || pref; }
+  return pref;
+}
+function stopSpeak(){ if (typeof recActive!=="undefined" && recActive){ try{ recActive.abort(); }catch(e){} } playToken++; if (hasTTS) speechSynthesis.cancel(); markPlaying(null); }
+function speakOne(text, role, rate){
+  return new Promise(res=>{
+    if (!hasTTS){ res(); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US"; u.rate = rate || P.settings.rate;
+    const v = pickVoice(role); if (v) u.voice = v;
+    if (role === "A") u.pitch = 1.08; else u.pitch = 0.95;
+    let doneFlag = false; const fin = ()=>{ if(!doneFlag){ doneFlag=true; res(); } };
+    u.onend = fin; u.onerror = fin;
+    setTimeout(fin, 1800 + text.length * 140 / (u.rate||1));
+    speechSynthesis.speak(u);
+  });
+}
+async function playSeq(items, rate){
+  if (!hasTTS){ toast("이 브라우저는 음성 재생을 지원하지 않습니다."); return; }
+  stopSpeak(); const t = playToken;
+  for (const it of items){
+    if (t !== playToken) return;
+    markPlaying(it.key);
+    await speakOne(it.en, it.s, rate);
+    if (t !== playToken) return;
+    await new Promise(r=>setTimeout(r, 350));
+  }
+  if (t === playToken) markPlaying(null);
+}
+function markPlaying(key){
+  document.querySelectorAll(".line.playing").forEach(e=>e.classList.remove("playing"));
+  if (key != null){ const el = document.querySelector('[data-key="'+key+'"]'); if (el) el.classList.add("playing"); }
+}
+
+/* ============ 유틸 ============ */
+const $app = document.getElementById("app");
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PLAY = '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg>';
+const pat = p => esc(p).replace("___", "<u>&nbsp;___&nbsp;</u>");
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function weekDays(){ const d=new Date(); const dow=(d.getDay()+6)%7; const mon=new Date(d); mon.setDate(d.getDate()-dow); const out=[]; for(let i=0;i<7;i++){const x=new Date(mon); x.setDate(mon.getDate()+i); out.push(x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"));} return out; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function mmss(ms){ const s=Math.max(0,Math.floor(ms/1000)); return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
+function toast(msg){ const b=document.createElement("div"); b.className="banner"; b.style.cssText="position:fixed;left:16px;right:16px;bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:20;max-width:488px;margin:0 auto;box-shadow:var(--shadow)"; b.textContent=msg; document.body.appendChild(b); setTimeout(()=>b.remove(),2600); }
+const allItems = () => [...LESSONS, REVIEW];
+const nextLesson = () => allItems().find(l=>!P.done[l.id]);
+const trackChip = t => t==="여행" ? '<span class="chip travel">여행</span>' : t==="비즈니스" ? '<span class="chip biz">비즈니스</span>' : '<span class="chip wait">'+esc(t)+'</span>';
+
+/* ============ 홈 ============ */
+let cur = null, timerId = null;
+function renderHome(){
+  cur = null; clearInterval(timerId); stopSpeak();
+  const nx = nextLesson();
+  const doneCount = allItems().filter(l=>P.done[l.id]).length;
+  const wk = weekDays(); const studiedThisWeek = wk.filter(d=>P.days.includes(d)).length;
+  const days = ["월","화","수","목","금","토","일"];
+  const weekStrip = days.map((d,i)=>{
+    if (i===6) return '<div class="wd rest"><div class="dot">휴</div>'+d+'</div>';
+    const l = allItems()[i]; const cls = P.done[l.id] ? "done" : (nx && nx.id===l.id ? "next" : "");
+    return '<div class="wd '+cls+'"><div class="dot">'+(P.done[l.id]?"✓":(i+1))+'</div>'+d+'</div>';
+  }).join("");
+
+  const hero = nx ? `
+    <div class="ticket">
+      <div class="t-main">
+        <div class="t-code"><span class="mono">WEEK 01 · DAY 0${nx.n} · ${nx.day}</span>${trackChip(nx.track)}</div>
+        <div class="t-title">${esc(nx.title)}</div>
+        <div class="t-en">${esc(nx.en)}</div>
+      </div>
+      <div class="perf"></div>
+      <div class="t-stub">
+        <div><div class="mono muted">예상 시간</div><div style="font-weight:700;font-size:18px">${nx.review?"약 7분":"약 10분"}</div></div>
+        <button class="btn primary" data-act="open" data-id="${nx.id}">오늘 학습 시작</button>
+      </div>
+    </div>` : `
+    <div class="ticket"><div class="t-main">
+      <div class="mono muted">WEEK 01 · COMPLETE</div>
+      <div class="t-title">1주차 완료</div>
+      <div class="t-en">2주차 콘텐츠는 준비 중입니다. 아래에서 지난 과를 다시 들을 수 있습니다.</div>
+    </div></div>`;
+
+  const list = allItems().map(l=>{
+    const st = P.done[l.id] ? '<span class="chip done">완료</span>' : (nx && nx.id===l.id ? '<span class="chip today">오늘</span>' : '<span class="chip wait">대기</span>');
+    return `<button class="lrow" data-act="open" data-id="${l.id}"><span class="day">${l.day}</span><span class="tx"><div class="tt">${esc(l.title)}</div><div class="te">${esc(l.en)} · ${esc(l.track)}</div></span>${st}</button>`;
+  }).join("") + `<div class="lrow" style="opacity:.7"><span class="day">일</span><span class="tx"><div class="tt">쉬는 날</div><div class="te">밀린 과가 있으면 이날 보충하세요</div></span></div>`;
+
+  const road = ROADMAP.map((s,si)=>`
+    <div class="stage">
+      <div class="stage-h"><b>${s.stage}</b><span class="mono muted">${s.range}</span></div>
+      ${s.weeks.map((w,wi)=>{ const n=si*4+wi+1; const isCur=n===1; return `<div class="wk ${isCur?"cur":""}"><span class="wn">W${String(n).padStart(2,"0")}</span><span>${esc(w[0])}${w[1]?"<br><span class='muted'>"+esc(w[1])+"</span>":""}</span>${isCur?'<span class="chip today">진행 중</span>':'<span class="chip wait">준비 중</span>'}</div>`; }).join("")}
+    </div>`).join("");
+
+  const rate = P.settings.rate;
+  const me = Object.assign({}, ME_DEFAULT, P.me||{});
+  const standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+
+  $app.innerHTML = `
+    <div class="top"><div class="brand">하루<b>10</b> 영어회화</div><button class="modebtn" data-act="dark" aria-pressed="${P.settings.dark}">${P.settings.dark?"☀ 라이트 모드":"☾ 다크 모드"}</button></div>
+    <div class="hello">${me.call ? esc(me.call)+", " : ""}오늘도 10분만.</div>
+    <div class="muted" style="font-size:14px">듣고, 따라 말하고, 바꿔 말하기. 매일 대화 하나씩.</div>
+    ${standalone ? "" : '<div class="banner" style="margin-top:12px">사파리 아래쪽 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b>를 누르면 앱처럼 전체 화면으로 쓸 수 있습니다.</div>'}
+    <div class="stats">
+      <div class="stat"><div class="n">${studiedThisWeek}<span class="muted" style="font-size:14px">/6</span></div><div class="l">이번 주 학습일</div></div>
+      <div class="stat"><div class="n">${doneCount}<span class="muted" style="font-size:14px">/6</span></div><div class="l">완료한 과</div></div>
+      <div class="stat"><div class="n">${P.wrong.length}</div><div class="l">복습할 문제</div></div>
+    </div>
+    <div class="sec">${hero}</div>
+    <div class="sec"><div class="sec-h"><h2>이번 주</h2><span class="mono muted">1주차</span></div><div class="week">${weekStrip}</div></div>
+    <div class="sec"><div class="sec-h"><h2>1주차 과정</h2><span class="muted" style="font-size:13px">여행 2 · 비즈니스 2 · 종합 1</span></div><div class="stack" style="gap:8px">${list}</div></div>
+    <div class="sec"><div class="sec-h"><h2>12주 로드맵</h2></div><div class="stack">${road}</div></div>
+    <div class="sec"><div class="sec-h"><h2>설정</h2></div>
+      <div class="setting">
+        <div><div style="font-weight:600;margin-bottom:8px">음성 속도</div>
+          <div class="seg" role="group" aria-label="음성 속도">
+            <button data-act="rate" data-v="0.7" aria-pressed="${rate===0.7}">느리게</button>
+            <button data-act="rate" data-v="0.85" aria-pressed="${rate===0.85}">보통</button>
+            <button data-act="rate" data-v="1" aria-pressed="${rate===1}">원어민</button>
+          </div></div>
+        <div class="row between"><div><div style="font-weight:600">다크 모드</div><div class="note">검정 배경에 흰 글씨</div></div>
+          <button class="switch" role="switch" aria-label="다크 모드" aria-checked="${P.settings.dark}" data-act="dark"></button></div>
+        <div class="row between"><div><div style="font-weight:600">한글 해석 기본 표시</div><div class="note">익숙해지면 끄고 들어보세요</div></div>
+          <button class="switch" role="switch" aria-label="한글 해석 기본 표시" aria-checked="${P.settings.showKo}" data-act="showKo"></button></div>
+        <button class="btn ghost block" data-act="testVoice">${PLAY} 음성 테스트</button>
+        <div class="note">${hasTTS ? "휴대폰에 설치된 영어 음성으로 읽어줍니다. 소리가 안 나면 무음 모드를 확인하세요." : "이 브라우저는 음성 재생을 지원하지 않습니다. 크롬이나 사파리로 열어주세요."}<br>${SR ? "따라 말하기에서 🎤 버튼을 누르면 발음을 글자로 인식해 정답과 비교합니다. 처음 한 번 마이크 권한을 허용해 주세요." : "이 폰에서는 음성인식을 쓸 수 없어서, 따라 말하기는 소리 내어 말한 뒤 직접 체크하는 방식입니다."}<br>학습 기록은 이 아이폰 안에만 저장됩니다. 가끔 아래에서 백업 파일을 저장해 두세요.</div>
+      </div>
+    </div>
+    <div class="sec"><div class="sec-h"><h2>내 정보</h2><span class="muted" style="font-size:13px">이 폰에만 저장</span></div>
+      <div class="setting">
+        <div class="field"><label for="meCall">호칭 (홈 화면 인사)</label><input id="meCall" value="${esc(me.call)}" placeholder="예: 김선생님"></div>
+        <div class="field"><label for="meKname">한글 이름 (자기소개 해석)</label><input id="meKname" value="${esc(me.kname)}" placeholder="김민수"></div>
+        <div class="grid2">
+          <div class="field"><label for="meFirst">영문 이름</label><input id="meFirst" value="${esc(me.first)}" placeholder="Minsu" autocapitalize="words"></div>
+          <div class="field"><label for="meLast">영문 성</label><input id="meLast" value="${esc(me.last)}" placeholder="Kim" autocapitalize="words"></div>
+        </div>
+        <div class="field"><label for="meCo">회사명 (영문)</label><input id="meCo" value="${esc(me.co)}" placeholder="ABC Construction"></div>
+        <button class="btn primary block" data-act="saveMe">저장하고 대화문에 반영</button>
+        <div class="note">입력한 이름과 회사명이 자기소개·호텔 예약 대화문에 들어갑니다. 인터넷에는 올라가지 않습니다.</div>
+      </div>
+    </div>
+    <div class="sec"><div class="sec-h"><h2>백업</h2></div>
+      <div class="setting">
+        <div class="grid2"><button class="btn ghost" data-act="exportFile">백업 파일 저장</button><button class="btn ghost" data-act="exportCopy">백업 코드 복사</button></div>
+        <div class="field"><label for="importFile">백업 파일 불러오기</label><input id="importFile" type="file" accept="application/json,.json,text/plain"></div>
+        <div class="field"><label for="importText">또는 백업 코드 붙여넣기</label><textarea id="importText" rows="3" placeholder="복사해 둔 백업 코드를 붙여넣으세요"></textarea></div>
+        <button class="btn ghost block" data-act="importText">코드로 불러오기</button>
+        <div class="note">불러오면 지금 기록과 합쳐집니다. 학습일과 완료한 과는 어느 쪽에서도 지워지지 않습니다.</div>
+      </div>
+    </div>`;
+  window.scrollTo(0,0);
+}
+
+/* ============ 레슨 ============ */
+const STEPS_N = [ ["상황",1],["대화 듣기",2],["핵심 표현",2],["따라 말하기",3],["역할극",1],["퀴즈",1] ];
+const STEPS_R = [ ["표현 카드",3],["복습 퀴즈",4] ];
+
+function openLesson(id){
+  const l = allItems().find(x=>x.id===id); if (!l) return;
+  let quiz;
+  if (l.review){
+    const wrongQ = P.wrong.map(q=>ALLQ.find(x=>x.id===q)).filter(Boolean);
+    const rest = shuffle(ALLQ.filter(q=>!P.wrong.includes(q.id)));
+    quiz = [...wrongQ, ...rest].slice(0, 8);
+  } else quiz = l.quiz.slice();
+  quiz = quiz.map(q=>({...q, order: shuffle([0,1,2])}));
+  cur = { l, step:0, showKo:P.settings.showKo, sh:0, reps:{}, role:0, roleShown:{}, qi:0, picked:null, correct:0, quiz, start:Date.now() };
+  clearInterval(timerId);
+  timerId = setInterval(()=>{ const t=document.getElementById("tmr"); if(t) t.textContent = mmss(Date.now()-cur.start); }, 1000);
+  renderLesson();
+}
+function steps(){ return cur.l.review ? STEPS_R : STEPS_N; }
+
+function renderLesson(){
+  stopSpeak();
+  const l = cur.l, S = steps(), st = cur.step;
+  const pct = Math.round((st+1)/S.length*100);
+  let body = "";
+  const kind = S[st][0];
+  if (kind==="상황") body = vScene(l);
+  else if (kind==="대화 듣기") body = vListen(l);
+  else if (kind==="핵심 표현") body = vExp(l.exps);
+  else if (kind==="따라 말하기") body = vShadow(l);
+  else if (kind==="역할극") body = vRole(l);
+  else if (kind==="퀴즈" || kind==="복습 퀴즈") body = vQuiz();
+  else if (kind==="표현 카드") body = vExp(LESSONS.flatMap(x=>x.exps), true);
+
+  const last = st === S.length-1;
+  const quizBlock = (kind==="퀴즈"||kind==="복습 퀴즈") && cur.qi < cur.quiz.length;
+  $app.innerHTML = `
+    <div class="lbar">
+      <div class="row"><button class="back" data-act="home">‹ 홈</button><span class="row" style="gap:8px"><button class="modebtn" data-act="dark" aria-label="다크 모드 전환">${P.settings.dark?"☀":"☾"}</button><span class="timer" id="tmr">${mmss(Date.now()-cur.start)}</span></span></div>
+      <div class="prog"><i style="width:${pct}%"></i></div>
+      <div class="steplabel"><span><b>${st+1}/${S.length}</b> ${S[st][0]}</span><span>권장 ${S[st][1]}분</span></div>
+    </div>
+    ${body}
+    <div class="bottom"><div class="in">
+      <button class="btn ghost" data-act="prev" ${st===0?"disabled":""}>이전</button>
+      <button class="btn primary" data-act="next" ${quizBlock?"disabled":""}>${last?"학습 완료":"다음"}</button>
+    </div></div>`;
+  window.scrollTo(0,0);
+}
+
+function vScene(l){
+  return `<div class="stitle">${esc(l.title)}</div><div class="sdesc">${esc(l.en)}</div>
+  <div class="ticket"><div class="t-main stack">
+    <div class="mono muted">SCENE · DAY 0${l.n} · ${l.day}</div>
+    <div class="scene-em">${esc(l.scene)}</div>
+  </div><div class="perf"></div><div class="t-stub" style="display:block">
+    <dl class="kv" style="margin:0">
+      <dt>오늘 목표</dt><dd>${esc(l.goal)}</dd>
+      <dt>A 역할</dt><dd>${esc(l.roles.A)}</dd>
+      <dt>B 역할</dt><dd>${esc(l.roles.B)}${(P.me&&P.me.call)?" ("+esc(P.me.call)+")":""}</dd>
+    </dl></div></div>
+  <div class="note" style="margin-top:14px">순서: 대화 듣기 → 핵심 표현 → 따라 말하기 → 역할극 → 퀴즈</div>`;
+}
+
+function vListen(l){
+  const lines = l.lines.map((x,i)=>`<button class="line ${x.s==="B"?"me":""}" data-act="say" data-i="${i}" data-key="L${i}"><span class="spk">${x.s}</span><span><div class="en">${esc(x.en)}</div>${cur.showKo?'<div class="ko">'+esc(x.ko)+'</div>':""}</span></button>`).join("");
+  return `<div class="stitle">대화 듣기</div><div class="sdesc">먼저 느리게 한 번, 보통 속도로 한 번 들어보세요. 문장을 누르면 그 문장만 들립니다.</div>
+  <div class="ctrls"><button class="btn soft" data-act="playAll" data-r="0.7">${PLAY} 느리게 전체</button><button class="btn primary" data-act="playAll" data-r="">${PLAY} 보통 속도</button></div>
+  <div class="toggle-row"><span>한글 해석</span><button class="switch" role="switch" aria-label="한글 해석" aria-checked="${cur.showKo}" data-act="lessonKo"></button></div>
+  <div class="stack" style="gap:8px">${lines}</div>`;
+}
+
+function vExp(exps, isReview){
+  const cards = exps.map((e,ei)=>`
+    <div class="card exp">
+      <div class="mono muted">표현 ${ei+1}</div>
+      <div class="pattern">${pat(e.p)}</div>
+      <div class="muted" style="font-size:14px;margin-top:-6px">${esc(e.ko)}</div>
+      <div class="mono muted" style="margin-top:4px">바꿔 말하기</div>
+      ${e.subs.map((s,si)=>`<button class="sub" data-act="sayText" data-t="${esc(s[0])}"><span class="play">${PLAY}</span><span><div style="font-weight:600">${esc(s[0])}</div><div class="ko">${esc(s[1])}</div></span></button>`).join("")}
+    </div>`).join("");
+  return `<div class="stitle">${isReview?"이번 주 표현 카드":"핵심 표현"}</div>
+  <div class="sdesc">${isReview?"이번 주에 배운 표현 10개입니다. 하나씩 듣고 소리 내어 읽어보세요.":"빈칸에 다른 단어를 넣어 말해보세요. 누르면 소리가 나옵니다."}</div>
+  <div class="stack">${cards}</div>`;
+}
+
+function vShadow(l){
+  const mine = l.lines.map((x,i)=>({...x,i})).filter(x=>x.s==="B");
+  const k = Math.min(cur.sh, mine.length-1); const x = mine[k];
+  const r = cur.reps[k]||0;
+  return `<div class="stitle">따라 말하기</div><div class="sdesc">내 대사만 연습합니다. 듣고 → 소리 내어 3번 따라 말한 뒤 체크하세요.</div>
+  <div class="card stack" style="padding:20px">
+    <div class="row between"><span class="mono muted">문장 ${k+1} / ${mine.length}</span><span class="chip ${r>=3?"done":"wait"}">${r>=3?"완료":r+"/3회"}</span></div>
+    <div class="shadow-big">${esc(x.en)}</div>
+    <div class="ko" style="font-size:15px">${esc(x.ko)}</div>
+    <div class="ctrls" style="margin:6px 0 0"><button class="btn soft" data-act="sayText" data-t="${esc(x.en)}" data-r="0.7">${PLAY} 느리게</button><button class="btn primary" data-act="sayText" data-t="${esc(x.en)}">${PLAY} 듣기</button></div>
+    <div class="reps">${[0,1,2].map(j=>`<span class="rep ${j<r?"on":""}"></span>`).join("")}</div>
+    ${SR ? `<button class="btn primary block" data-act="listen" id="srBtn" ${r>=3?"disabled":""}>🎤 말하고 발음 확인</button>` : ""}
+    <div id="srRes" aria-live="polite"></div>
+    <button class="btn ghost block" data-act="rep" ${r>=3?"disabled":""}>${SR?"직접 체크 (+1)":"소리 내어 따라 말했어요 (+1)"}</button>
+  </div>
+  <div class="pager">
+    <button class="btn sm ghost" data-act="shPrev" ${k===0?"disabled":""}>‹ 이전 문장</button>
+    <span class="mono muted">${mine.map((_,j)=>(cur.reps[j]||0)>=3?"●":"○").join(" ")}</span>
+    <button class="btn sm ghost" data-act="shNext" ${k>=mine.length-1?"disabled":""}>다음 문장 ›</button>
+  </div>`;
+}
+
+function vRole(l){
+  const idx = cur.role; const L = l.lines;
+  let out = "";
+  for (let i=0;i<L.length && i<=idx;i++){
+    const x = L[i];
+    if (x.s==="A"){
+      out += `<button class="line" data-act="sayText" data-s="A" data-t="${esc(x.en)}" data-key="R${i}"><span class="spk">A</span><span><div class="en">${esc(x.en)}</div><div class="ko">${esc(x.ko)}</div><div class="mono" style="color:var(--accent);margin-top:4px">▶ 눌러서 듣기</div></span></button>`;
+    } else if (cur.roleShown[i]){
+      out += `<div class="line me" data-key="R${i}"><span class="spk">B</span><span><div class="en">${esc(x.en)}</div><div class="ko">${esc(x.ko)}</div></span></div>`;
+    } else {
+      out += `<div class="card hint stack"><div class="mono" style="color:var(--accent)">내 차례 · 영어로 말해보세요</div><div style="font-size:18px;font-weight:600">${esc(x.ko)}</div><button class="btn primary block" data-act="reveal" data-i="${i}">정답 확인하고 듣기</button></div>`;
+    }
+  }
+  const curLine = L[Math.min(idx, L.length-1)];
+  const waitingReveal = curLine.s==="B" && !cur.roleShown[idx];
+  const finished = idx >= L.length-1 && !waitingReveal;
+  let ctl = "";
+  if (!waitingReveal && !finished) ctl = `<button class="btn soft block" data-act="roleNext">다음 대사 ›</button>`;
+  if (finished) ctl = `<div class="fb good"><b>역할극 완료</b>처음부터 다시 하려면 아래 버튼을 누르세요.</div><button class="btn ghost block" data-act="roleReset">처음부터 다시</button>`;
+  return `<div class="stitle">역할극</div><div class="sdesc">상대(A) 대사를 듣고, 내 차례에는 한글을 보고 먼저 영어로 말해본 뒤 정답을 확인하세요.</div>
+  <div class="stack" style="gap:8px">${out}${ctl}</div>`;
+}
+
+function vQuiz(){
+  const Q = cur.quiz;
+  if (cur.qi >= Q.length){
+    return `<div class="stitle">퀴즈 결과</div><div class="sdesc">틀린 문제는 토요일 복습에 먼저 나옵니다.</div>
+      <div class="card" style="text-align:center;padding:24px"><div class="mono muted">SCORE</div><div style="font-size:44px;font-weight:700;font-variant-numeric:tabular-nums">${cur.correct} / ${Q.length}</div>
+      <div class="muted">${cur.correct===Q.length?"모두 맞혔습니다.":"‘학습 완료’를 눌러 오늘 과정을 마치세요."}</div></div>`;
+  }
+  const q = Q[cur.qi]; const picked = cur.picked;
+  const opts = q.order.map(oi=>{
+    let cls = "";
+    if (picked!==null){ if (oi===q.a) cls="right"; else if (oi===picked) cls="wrong"; }
+    return `<button class="opt ${cls}" data-act="pick" data-o="${oi}" ${picked!==null?"disabled":""}>${esc(q.o[oi])}</button>`;
+  }).join("");
+  const fb = picked===null ? "" : (picked===q.a ? `<div class="fb good"><b>정답입니다</b>${esc(q.why)}</div>` : `<div class="fb bad"><b>정답: ${esc(q.o[q.a])}</b>${esc(q.why)}</div>`);
+  const nextBtn = picked===null ? "" : `<button class="btn primary block" data-act="qNext">${cur.qi===Q.length-1?"결과 보기":"다음 문제 ›"}</button>`;
+  return `<div class="stitle">${cur.l.review?"복습 퀴즈":"퀴즈"}</div><div class="sdesc">문제 ${cur.qi+1} / ${Q.length}${cur.l.review && P.wrong.includes(q.id)?" · 지난번에 틀린 문제":""}</div>
+    <div class="stack"><div class="q-prompt">${esc(q.q)}</div>${opts}${fb}${nextBtn}</div>`;
+}
+
+function finishLesson(){
+  const l = cur.l; const secs = Math.round((Date.now()-cur.start)/1000);
+  P.done[l.id] = { date: todayStr(), secs };
+  const t = todayStr(); if (!P.days.includes(t)) P.days.push(t);
+  save();
+  clearInterval(timerId); stopSpeak();
+  const nx = nextLesson();
+  $app.innerHTML = `
+    <div class="stamp"><div><span>DAY 0${l.n} · ${l.day}</span><b>DONE</b><span>${todayStr().replaceAll("-",".")}</span></div></div>
+    <div style="text-align:center" class="stack">
+      <h1 style="font-size:24px">${esc(l.title)} 완료</h1>
+      <div class="muted">학습 시간 ${mmss(secs*1000)}${l.review?"":" · 퀴즈 "+cur.correct+"/"+cur.quiz.length}</div>
+    </div>
+    ${attCard()}
+    <div class="sec card stack">
+      <div class="mono muted">오늘 배운 표현</div>
+      ${(l.review?[]:l.exps).map(e=>`<button class="sub" data-act="sayText" data-t="${esc(e.subs[0][0])}"><span class="play">${PLAY}</span><span><div style="font-weight:600">${pat(e.p)}</div><div class="ko">${esc(e.ko)}</div></span></button>`).join("") || '<div class="muted">이번 주 표현 10개를 복습했습니다. 내일은 쉬는 날입니다.</div>'}
+    </div>
+    <div class="sec stack">
+      <button class="btn primary block" data-act="home">홈으로</button>
+      ${nx?`<button class="btn ghost block" data-act="open" data-id="${nx.id}">다음 과 미리 하기: ${esc(nx.title)}</button>`:""}
+    </div>`;
+  cur = null; window.scrollTo(0,0);
+}
+
+/* ============ 음성인식 ============ */
+const normW = t => t.toLowerCase().replace(/[’‘]/g,"'").replace(/n't\b/g," not").replace(/'m\b/g," am").replace(/'re\b/g," are").replace(/'s\b/g," is").replace(/'ll\b/g," will").replace(/'d\b/g," would").replace(/'ve\b/g," have").replace(/a\.m\./g,"am").replace(/p\.m\./g,"pm").replace(/[^a-z0-9' ]/g," ").split(/\s+/).filter(Boolean);
+function matchWords(target, heard){
+  const T = normW(target), H = normW(heard);
+  const dp = Array.from({length:T.length+1},()=>new Array(H.length+1).fill(0));
+  for (let i=T.length-1;i>=0;i--) for (let j=H.length-1;j>=0;j--) dp[i][j] = T[i]===H[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  const ok = new Array(T.length).fill(false); let i=0,j=0;
+  while(i<T.length && j<H.length){ if(T[i]===H[j]){ ok[i]=true; i++; j++; } else if (dp[i+1][j]>=dp[i][j+1]) i++; else j++; }
+  const hit = ok.filter(Boolean).length;
+  return { words:T, ok, score: T.length ? Math.round(hit/T.length*100) : 0 };
+}
+let recActive = null;
+function startListen(){
+  if (!SR || !cur) return;
+  if (recActive){ try{ recActive.abort(); }catch(e){} recActive=null; }
+  stopSpeak();
+  const mine = cur.l.lines.filter(x=>x.s==="B"); const k = Math.min(cur.sh, mine.length-1); const target = mine[k].en;
+  const btn = document.getElementById("srBtn"), out = document.getElementById("srRes");
+  const rec = new SR(); recActive = rec;
+  rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
+  if (btn){ btn.textContent = "듣는 중… 지금 말하세요"; btn.classList.add("listening"); }
+  let got = false;
+  rec.onresult = ev => {
+    got = true;
+    const alts = Array.from(ev.results[0]||[]).map(a=>a.transcript);
+    let best = null, heard = "";
+    for (const h of alts){ const m = matchWords(target, h); if (!best || m.score > best.score){ best = m; heard = h; } }
+    if (!best) return;
+    const pass = best.score >= 80;
+    if (pass){ cur.reps[k] = Math.min(3, (cur.reps[k]||0)+1); }
+    const wordsHtml = best.words.map((w,i)=>`<span class="${best.ok[i]?"ok":"miss"}">${esc(w)}</span>`).join(" ");
+    const html = `<div class="fb ${pass?"good":"bad"}" style="margin-top:4px"><b>일치율 ${best.score}% ${pass?"· 통과 (+1)":"· 80% 이상이면 통과"}</b>인식된 말: “${esc(heard)}”</div><div class="sr-words" style="margin-top:8px">${wordsHtml}</div><div class="note">초록색은 인식된 단어, 빨간 밑줄은 인식되지 않은 단어입니다.</div>`;
+    const y = window.scrollY; renderLesson(); window.scrollTo(0,y);
+    const o2 = document.getElementById("srRes"); if (o2) o2.innerHTML = html;
+    if (pass && (cur.reps[k]||0) >= 3 && k < mine.length-1) toast("이 문장 완료. ‘다음 문장’으로 넘어가세요.");
+  };
+  rec.onerror = ev => {
+    const msg = ev.error==="not-allowed" || ev.error==="service-not-allowed" ? "마이크 권한이 꺼져 있습니다. 아이폰 설정 → Safari → 마이크(또는 설정 → 개인정보 보호 → 마이크, 음성 인식)에서 허용해 주세요."
+      : ev.error==="no-speech" ? "소리가 들리지 않았습니다. 버튼을 누르고 바로 말해보세요."
+      : "음성인식을 하지 못했습니다 ("+ev.error+"). 인터넷 연결을 확인하거나 직접 체크를 눌러주세요.";
+    if (out) out.innerHTML = `<div class="fb bad" style="margin-top:4px">${esc(msg)}</div>`;
+  };
+  rec.onend = () => { recActive = null; const b2=document.getElementById("srBtn"); if (b2 && !got){ b2.textContent="🎤 말하고 발음 확인"; b2.classList.remove("listening"); } };
+  try { rec.start(); } catch(e){ if (out) out.innerHTML = `<div class="fb bad">음성인식을 시작하지 못했습니다. 잠시 후 다시 눌러주세요.</div>`; }
+}
+
+/* ============ 백업 ============ */
+function mergeImport(obj){
+  if (!obj || typeof obj!=="object" || !obj.days || !obj.done) throw new Error("형식");
+  P.days = Array.from(new Set([...(P.days||[]), ...obj.days])).sort();
+  P.done = Object.assign({}, obj.done, P.done);
+  P.wrong = Array.from(new Set([...(P.wrong||[]), ...(obj.wrong||[])]));
+  if (obj.me && !(P.me && P.me.first)) P.me = obj.me;
+  save(); personalize(); renderHome(); toast("백업을 불러와 기록을 합쳤습니다.");
+}
+function backupText(){ return JSON.stringify({app:"haru10", v:1, exportedAt:new Date().toISOString(), ...P}); }
+
+/* ============ 출석 ============ */
+function parseD(s){ const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); }
+function fmtD(s){ const d=parseD(s); return (d.getMonth()+1)+"."+d.getDate(); }
+// 두 학습일 사이에 빠진 날이 일요일(쉬는 날)뿐이면 연속으로 본다
+function connected(a,b){ const d=parseD(a); d.setDate(d.getDate()+1); const e=parseD(b);
+  while(d<e){ if(d.getDay()!==0) return false; d.setDate(d.getDate()+1); } return true; }
+function attendance(){
+  const days = Array.from(new Set(P.days)).sort(); const today = todayStr();
+  if (!days.length) return null;
+  const runs=[]; let r={start:days[0],end:days[0],len:1};
+  for(let i=1;i<days.length;i++){ if(connected(days[i-1],days[i])){ r.end=days[i]; r.len++; } else { runs.push(r); r={start:days[i],end:days[i],len:1}; } }
+  runs.push(r);
+  const last = runs[runs.length-1];
+  const current = (last.end===today || connected(last.end,today)) ? last.len : 0;
+  // 출석률 = 학습한 날(월~토) ÷ 첫 학습일부터 오늘까지의 학습 대상일(월~토) × 100
+  let target=0; const d=parseD(days[0]), e=parseD(today);
+  while(d<=e){ if(d.getDay()!==0) target++; d.setDate(d.getDate()+1); }
+  const attended = days.filter(x=>parseD(x).getDay()!==0 && x<=today).length;
+  const rate = target ? Math.min(100, Math.round(attended/target*100)) : 0;
+  return { total:days.length, current, broken:runs.length>1, restart:last.start, best:Math.max(...runs.map(x=>x.len)), breaks:runs.length-1, attended, target, rate };
+}
+function attCard(){
+  const A = attendance(); if (!A) return "";
+  let head, sub;
+  if (!A.broken){
+    head = A.total===1 ? "1일차" : "연속 "+A.current+"일차";
+    sub = A.total===1 ? "첫 학습을 마쳤습니다. 내일도 이어가세요." : "한 번도 빠지지 않고 "+A.current+"일째 학습 중입니다.";
+  } else {
+    head = "재개 "+A.current+"일차<small>누적 "+A.total+"일차</small>";
+    sub = fmtD(A.restart)+"에 다시 시작해 "+A.current+"일째 이어가고 있습니다. 중단 전까지 포함하면 누적 "+A.total+"일입니다.";
+  }
+  return `<div class="sec att">
+    <div class="mono" style="color:var(--accent)">출석</div>
+    <div class="att-h" style="margin-top:6px">${head}</div>
+    <div class="muted" style="font-size:14px;margin-top:4px">${esc(sub)}</div>
+    <div style="margin-top:14px" class="row between"><b>출석률 ${A.rate}%</b><span class="muted" style="font-size:13px">${A.attended}일 ÷ ${A.target}일</span></div>
+    <div class="meter"><i style="width:${A.rate}%"></i></div>
+    <div class="att-grid">
+      <div><b>${A.total}일</b><span>누적 학습일</span></div>
+      <div><b>${A.current}일</b><span>${A.broken?"재개 후 연속":"현재 연속"}</span></div>
+      <div><b>${A.best}일</b><span>최장 연속</span></div>
+    </div>
+    <div class="note" style="margin-top:10px">출석률 = 학습한 날(월~토) ÷ 첫 학습일부터 오늘까지의 월~토 일수 × 100. 일요일은 쉬는 날이라 빠져도 연속이 끊기지 않고, 출석률 계산에서도 뺍니다.${A.broken?" 중단 "+A.breaks+"회.":""}</div>
+  </div>`;
+}
+
+document.addEventListener("change", e=>{
+  if (e.target && e.target.id==="importFile" && e.target.files && e.target.files[0]){
+    const fr = new FileReader(); fr.onload = ()=>{ try{ mergeImport(JSON.parse(fr.result)); }catch(err){ toast("백업 파일 형식이 맞지 않습니다."); } }; fr.readAsText(e.target.files[0]);
+  }
+});
+/* ============ 이벤트 ============ */
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-act]"); if (!b || b.disabled) return;
+  const a = b.dataset.act;
+  if (a==="open") return openLesson(b.dataset.id);
+  if (a==="home") return renderHome();
+  if (a==="rate"){ P.settings.rate = parseFloat(b.dataset.v); save(); return renderHome(); }
+  if (a==="dark"){ P.settings.dark = !P.settings.dark; applyMode(); save(); return cur ? renderLessonKeep() : renderHome(); }
+  if (a==="listen") return startListen();
+  if (a==="saveMe"){
+    const g = id => (document.getElementById(id)||{}).value||"";
+    P.me = { call:g("meCall").trim(), kname:g("meKname").trim(), first:g("meFirst").trim(), last:g("meLast").trim(), co:g("meCo").trim() };
+    save(); personalize(); renderHome(); toast("저장했습니다. 대화문에 반영됐습니다."); return;
+  }
+  if (a==="exportFile"){
+    try{ const blob = new Blob([backupText()], {type:"application/json"}); const u = URL.createObjectURL(blob);
+      const el = document.createElement("a"); el.href = u; el.download = "haru10-backup-"+todayStr()+".json"; document.body.appendChild(el); el.click(); el.remove(); setTimeout(()=>URL.revokeObjectURL(u), 4000);
+      toast("백업 파일을 만들었습니다. ‘파일’ 앱에 저장하세요."); }catch(e){ toast("파일 저장을 지원하지 않습니다. ‘백업 코드 복사’를 이용하세요."); }
+    return;
+  }
+  if (a==="exportCopy"){
+    const t = backupText();
+    const ok = ()=>toast("백업 코드를 복사했습니다. 메모 앱 등에 붙여넣어 보관하세요.");
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok).catch(()=>{ const ta=document.getElementById("importText"); ta.value=t; ta.select(); toast("자동 복사가 안 되어 아래 칸에 넣었습니다. 길게 눌러 복사하세요."); });
+    else { const ta=document.getElementById("importText"); ta.value=t; ta.select(); toast("아래 칸의 코드를 길게 눌러 복사하세요."); }
+    return;
+  }
+  if (a==="importText"){ try{ mergeImport(JSON.parse(document.getElementById("importText").value)); }catch(e){ toast("백업 코드 형식이 맞지 않습니다."); } return; }
+  if (a==="showKo"){ P.settings.showKo = !P.settings.showKo; save(); return renderHome(); }
+  if (a==="testVoice") return playSeq([{en:"Hello! Let's practice English for ten minutes today.", s:"B"}]);
+  if (a==="sayText") return playSeq([{en:b.dataset.t, s:b.dataset.s||"B", key:b.dataset.key}], b.dataset.r?parseFloat(b.dataset.r):undefined);
+  if (!cur) return;
+  const S = steps();
+  if (a==="prev"){ if (cur.step>0){ cur.step--; renderLesson(); } return; }
+  if (a==="next"){ if (cur.step < S.length-1){ cur.step++; renderLesson(); } else finishLesson(); return; }
+  if (a==="lessonKo"){ cur.showKo = !cur.showKo; return renderLesson(); }
+  if (a==="playAll"){ const r = b.dataset.r?parseFloat(b.dataset.r):undefined; return playSeq(cur.l.lines.map((x,i)=>({en:x.en,s:x.s,key:"L"+i})), r); }
+  if (a==="say"){ const i=+b.dataset.i; const x=cur.l.lines[i]; return playSeq([{en:x.en,s:x.s,key:"L"+i}]); }
+  if (a==="rep"){ const k=cur.sh; cur.reps[k]=(cur.reps[k]||0)+1; const mine=cur.l.lines.filter(x=>x.s==="B"); if (cur.reps[k]>=3 && k<mine.length-1){ cur.sh++; } return renderLessonKeep(); }
+  if (a==="shPrev"){ cur.sh=Math.max(0,cur.sh-1); return renderLessonKeep(); }
+  if (a==="shNext"){ cur.sh++; return renderLessonKeep(); }
+  if (a==="roleNext"){ cur.role++; renderLessonKeep(); const x=cur.l.lines[cur.role]; if (x && x.s==="A") playSeq([{en:x.en,s:"A",key:"R"+cur.role}]); scrollEnd(); return; }
+  if (a==="reveal"){ const i=+b.dataset.i; cur.roleShown[i]=true; renderLessonKeep(); playSeq([{en:cur.l.lines[i].en,s:"B",key:"R"+i}]); scrollEnd(); return; }
+  if (a==="roleReset"){ cur.role=0; cur.roleShown={}; renderLessonKeep(); const x=cur.l.lines[0]; playSeq([{en:x.en,s:x.s,key:"R0"}]); return; }
+  if (a==="pick"){ const q=cur.quiz[cur.qi]; cur.picked=+b.dataset.o;
+    if (cur.picked===q.a){ cur.correct++; P.wrong = P.wrong.filter(w=>w!==q.id); } else if (!P.wrong.includes(q.id)) P.wrong.push(q.id);
+    save(); return renderLessonKeep(); }
+  if (a==="qNext"){ cur.qi++; cur.picked=null; return renderLesson(); }
+});
+function renderLessonKeep(){ const y = window.scrollY; renderLesson(); window.scrollTo(0,y); }
+function scrollEnd(){ requestAnimationFrame(()=>window.scrollTo({top:document.body.scrollHeight, behavior:"smooth"})); }
+
+/* 역할극 첫 진입 시 A 대사 자동 재생은 하지 않음(모바일은 터치 후에만 소리 가능). */
+renderHome();
+if ("serviceWorker" in navigator){ window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
+</script>
+
+</body>
+</html>
