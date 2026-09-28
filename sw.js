@@ -1,5 +1,5 @@
 // 하루10 영어회화 — 오프라인 캐시. 앱을 고치면 VERSION 숫자를 올리세요.
-const VERSION = "haru10-v5";
+const VERSION = "haru10-v8";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => {

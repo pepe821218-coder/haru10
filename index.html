@@ -55,6 +55,7 @@ button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-r
 .brand b{color:var(--accent)}
 .hello{font-size:22px;font-weight:700;margin-bottom:4px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.statbtn{text-align:left;width:100%;cursor:pointer}.statbtn:active{transform:scale(.98)}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
 .stat .n{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
 .stat .l{font-size:12px;color:var(--muted)}
@@ -201,7 +202,7 @@ body{-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px)}
 .safe-cover{position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:30}
 .field{display:flex;flex-direction:column;gap:4px}
 .field label{font-size:13px;color:var(--muted)}
-.field input,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.field input,.field select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sr-words{font-size:18px;font-weight:600;line-height:1.6}
 .sr-words .ok{color:var(--good)}
@@ -260,24 +261,52 @@ personalize();
 const hasTTS = "speechSynthesis" in window;
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
 let voices = [], playToken = 0;
-function loadVoices(){ if(!hasTTS) return; voices = speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang)); }
+function loadVoices(){ if(!hasTTS) return; voices = speechSynthesis.getVoices().filter(v=>/^en[-_]/i.test(v.lang));
+  const w = document.getElementById("voiceWait"); if (w && voices.length && typeof renderHome==="function"){ const y = window.scrollY; renderHome(); window.scrollTo(0,y); } }
 if (hasTTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+const NOVELTY = /\b(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Ralph|Kathy|Hysterical|Deranged|Pipe Organ)\b/i;
+function voiceScore(v){
+  const id = (v.name+" "+(v.voiceURI||"")).toLowerCase();
+  let s = 0;
+  if (/premium|프리미엄/.test(id)) s += 100; else if (/enhanced|향상|고품질/.test(id)) s += 60;
+  if (/eloquence|eddy|flo\b|grandma|grandpa|reed|rocko|sandy|shelley/.test(id)) s -= 40;
+  if (/\b(ava|zoe|evan|nathan|samantha|allison|susan|tom|noelle|joelle|tessa|serena|karen|daniel|oliver|jamie|aria|jenny|guy)\b/.test(id)) s += 30;
+  if (/google us english|microsoft/.test(id)) s += 20;
+  if (/en[-_]us/i.test(v.lang)) s += 10; else if (/en[-_](gb|au|ie|ca)/i.test(v.lang)) s += 4;
+  if (v.localService) s += 3;
+  return s;
+}
+function goodVoices(){ return voices.filter(v=>!NOVELTY.test(v.name)).sort((x,y)=>voiceScore(y)-voiceScore(x)); }
+const vkey = v => v.voiceURI || v.name;
+const baseName = v => v.name.replace(/\s*[\(（].*$/,"").trim().toLowerCase();
+function voiceLabel(v){ const id=(v.name+" "+(v.voiceURI||"")).toLowerCase(); const q = /premium|프리미엄/.test(id)?" · 고품질(Premium)":/enhanced|향상|고품질/.test(id)?" · 향상(Enhanced)":""; return v.name.replace(/\s*[\(（].*$/,"")+" ("+v.lang.replace("_","-")+")"+q; }
+function voicePickerHtml(){
+  const pool = goodVoices().slice(0,15);
+  if (!pool.length) return `<div class="note" id="voiceWait">영어 음성을 불러오는 중입니다. 잠시 뒤 다시 열어 주세요.</div>`;
+  const cb = vkey(pickVoice("B")), ca = vkey(pickVoice("A"));
+  const opts = sel => pool.map(v=>`<option value="${esc(vkey(v))}" ${vkey(v)===sel?"selected":""}>${esc(voiceLabel(v))}</option>`).join("");
+  const hasHQ = pool.some(v=>voiceScore(v)>=60);
+  return `<div class="field"><label for="voiceB">내 대사(B) 목소리</label><select id="voiceB" class="vsel">${opts(cb)}</select></div>
+    <div class="field"><label for="voiceA">상대방(A) 목소리</label><select id="voiceA" class="vsel">${opts(ca)}</select></div>
+    ${hasHQ ? "" : `<div class="note">고품질 음성이 보이지 않습니다. 아이폰 설정 → 손쉬운 사용 → 읽기 및 말하기 → 음성 → 영어에서 Ava·Zoe·Evan 등의 ‘고품질’ 음성을 내려받은 뒤 앱을 완전히 닫았다 여세요.</div>`}`;
+}
 function pickVoice(role){
   if (!voices.length) return null;
-  const us = voices.filter(v=>/en[-_]US/i.test(v.lang));
-  const pool = us.length ? us : voices;
-  const pref = pool.find(v=>/Samantha|Google US English|Aria|Jenny/i.test(v.name)) || pool[0];
-  if (role === "A"){ const other = pool.find(v=>v !== pref && /male|Daniel|Alex|Guy|Fred|Aaron/i.test(v.name)) || pool.find(v=>v!==pref); return other || pref; }
-  return pref;
+  const pool = goodVoices(); if (!pool.length) return null;
+  const want = role==="A" ? P.settings.voiceA : P.settings.voiceB;
+  const chosen = want && voices.find(v=>vkey(v)===want); if (chosen) return chosen;
+  const me = (P.settings.voiceB && voices.find(v=>vkey(v)===P.settings.voiceB)) || pool[0];
+  if (role !== "A") return me;
+  return pool.find(v=>baseName(v)!==baseName(me)) || me;
 }
 function stopSpeak(){ if (typeof recActive!=="undefined" && recActive){ try{ recActive.abort(); }catch(e){} } playToken++; if (hasTTS) speechSynthesis.cancel(); markPlaying(null); }
 function speakOne(text, role, rate){
   return new Promise(res=>{
     if (!hasTTS){ res(); return; }
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "en-US"; u.rate = rate || P.settings.rate;
-    const v = pickVoice(role); if (v) u.voice = v;
-    if (role === "A") u.pitch = 1.08; else u.pitch = 0.95;
+    u.rate = rate || P.settings.rate;
+    const v = pickVoice(role); if (v){ u.voice = v; u.lang = v.lang.replace("_","-"); } else u.lang = "en-US";
+    u.pitch = 1;  // 음높이를 바꾸면 고품질 음성도 부자연스러워져 원음 그대로 사용
     let doneFlag = false; const fin = ()=>{ if(!doneFlag){ doneFlag=true; res(); } };
     u.onend = fin; u.onerror = fin;
     setTimeout(fin, 1800 + text.length * 140 / (u.rate||1));
@@ -396,7 +425,7 @@ function renderHome(){
     <div class="stats">
       <div class="stat"><div class="n">${studiedThisWeek}<span class="muted" style="font-size:14px">/6</span></div><div class="l">이번 주 학습일</div></div>
       <div class="stat"><div class="n">${doneCount}<span class="muted" style="font-size:14px">/6</span></div><div class="l">${vw}주차 완료</div></div>
-      <div class="stat"><div class="n">${P.wrong.length}</div><div class="l">복습할 문제</div></div>
+      <button class="stat statbtn" data-act="wrongReview" aria-label="틀린 문제 복습 시작"><div class="n">${wrongList().length}</div><div class="l">복습할 문제 ›</div></button>
     </div>
     <div class="sec">${hero}</div>
     <div class="sec"><div class="sec-h"><h2>주차 선택</h2><span class="muted" style="font-size:13px">앞 주차 5과를 마치면 열립니다</span></div><div class="wchips">${chips}</div></div>
@@ -415,7 +444,8 @@ function renderHome(){
           <button class="switch" role="switch" aria-label="다크 모드" aria-checked="${P.settings.dark}" data-act="dark"></button></div>
         <div class="row between"><div><div style="font-weight:600">한글 해석 기본 표시</div><div class="note">익숙해지면 끄고 들어보세요</div></div>
           <button class="switch" role="switch" aria-label="한글 해석 기본 표시" aria-checked="${P.settings.showKo}" data-act="showKo"></button></div>
-        <button class="btn ghost block" data-act="testVoice">${PLAY} 음성 테스트</button>
+        ${hasTTS ? voicePickerHtml() : ""}
+        <button class="btn ghost block" data-act="testVoice">${PLAY} 음성 테스트 (대화 두 줄)</button>
         <div class="note">${hasTTS ? "휴대폰에 설치된 영어 음성으로 읽어줍니다. 소리가 안 나면 무음 모드를 확인하세요." : "이 브라우저는 음성 재생을 지원하지 않습니다. 크롬이나 사파리로 열어주세요."}<br>${SR ? "따라 말하기에서 🎤 버튼을 누르면 발음을 글자로 인식해 정답과 비교합니다. 처음 한 번 마이크 권한을 허용해 주세요." : "이 폰에서는 음성인식을 쓸 수 없어서, 따라 말하기는 소리 내어 말한 뒤 직접 체크하는 방식입니다."}<br>학습 기록은 이 아이폰 안에만 저장됩니다. 가끔 아래에서 백업 파일을 저장해 두세요.</div>
       </div>
     </div>
@@ -464,7 +494,36 @@ function openLesson(id){
   timerId = setInterval(()=>{ const t=document.getElementById("tmr"); if(t) t.textContent = mmss(Date.now()-cur.start); }, 1000);
   renderLesson();
 }
-function steps(){ return cur.l.review ? STEPS_R : STEPS_N; }
+const STEPS_W = [ ["복습 퀴즈",3] ];
+function steps(){ return cur.l.wrongOnly ? STEPS_W : cur.l.review ? STEPS_R : STEPS_N; }
+/* 틀린 문제 모아 풀기: 전 주차 대상, 오래전에 틀린 문제부터 최대 10개. 출석·레슨 완료에는 반영하지 않음 */
+function wrongList(){ return (P.wrong||[]).map(id=>ALLQ.find(q=>q.id===id)).filter(Boolean); }
+function qSource(qid){ const l = LESSONS.find(x=>x.quiz.some(q=>q.id===qid)); return l ? "W"+pad2(l.week)+" "+l.day+" · "+l.title : ""; }
+function openWrongReview(){
+  const list = wrongList();
+  if (!list.length){ toast("복습할 문제가 없습니다. 퀴즈에서 틀린 문제가 여기에 모입니다."); return; }
+  const quiz = list.slice(0,10).map(q=>({...q, src:qSource(q.id), order: shuffle([0,1,2])}));
+  const l = { id:"wrongrev", week: currentWeek(), n:0, day:"", title:"틀린 문제 복습", en:"Review Mistakes", review:true, wrongOnly:true };
+  cur = { l, step:0, showKo:P.settings.showKo, sh:0, reps:{}, role:0, roleShown:{}, qi:0, picked:null, correct:0, quiz, start:Date.now() };
+  clearInterval(timerId); renderLesson(); window.scrollTo(0,0);
+}
+function finishWrongReview(){
+  const total = cur.quiz.length, ok = cur.correct, left = wrongList().length;
+  save(); clearInterval(timerId); stopSpeak();
+  $app.innerHTML = `
+    <div style="text-align:center;padding-top:28px" class="stack">
+      <div class="mono muted">REVIEW MISTAKES</div>
+      <h1 style="font-size:24px">틀린 문제 복습 완료</h1>
+      <div style="font-size:40px;font-weight:800">${ok}<span class="muted" style="font-size:20px"> / ${total}</span></div>
+      <div class="muted">맞힌 ${ok}문제는 복습 목록에서 빠졌습니다. 남은 복습 문제 <b>${left}</b>개</div>
+      <div class="note">이 복습은 출석·레슨 완료 기록에는 반영되지 않습니다.</div>
+    </div>
+    <div class="sec stack">
+      ${left ? `<button class="btn primary block" data-act="wrongReview">남은 문제 다시 풀기 (${Math.min(left,10)}문제)</button>` : ""}
+      <button class="btn ${left?"ghost":"primary"} block" data-act="home">홈으로</button>
+    </div>`;
+  cur = null; window.scrollTo(0,0);
+}
 
 function renderLesson(){
   stopSpeak();
@@ -592,7 +651,7 @@ function vQuiz(){
   }).join("");
   const fb = picked===null ? "" : (picked===q.a ? `<div class="fb good"><b>정답입니다</b>${esc(q.why)}</div>` : `<div class="fb bad"><b>정답: ${esc(q.o[q.a])}</b>${esc(q.why)}</div>`);
   const nextBtn = picked===null ? "" : `<button class="btn primary block" data-act="qNext">${cur.qi===Q.length-1?"결과 보기":"다음 문제 ›"}</button>`;
-  return `<div class="stitle">${cur.l.review?"복습 퀴즈":"퀴즈"}</div><div class="sdesc">문제 ${cur.qi+1} / ${Q.length}${cur.l.review && P.wrong.includes(q.id)?" · 지난번에 틀린 문제":""}</div>
+  return `<div class="stitle">${cur.l.review?"복습 퀴즈":"퀴즈"}</div><div class="sdesc">문제 ${cur.qi+1} / ${Q.length}${q.src?" · "+esc(q.src):""}${cur.l.review && P.wrong.includes(q.id)?" · 지난번에 틀린 문제":""}</div>
     <div class="stack"><div class="q-prompt">${esc(q.q)}</div>${opts}${fb}${nextBtn}</div>`;
 }
 
@@ -624,50 +683,135 @@ function finishLesson(){
   cur = null; window.scrollTo(0,0);
 }
 
-/* ============ 음성인식 ============ */
-const normW = t => t.toLowerCase().replace(/[’‘]/g,"'").replace(/n't\b/g," not").replace(/'m\b/g," am").replace(/'re\b/g," are").replace(/'s\b/g," is").replace(/'ll\b/g," will").replace(/'d\b/g," would").replace(/'ve\b/g," have").replace(/a\.m\./g,"am").replace(/p\.m\./g,"pm").replace(/[^a-z0-9' ]/g," ").split(/\s+/).filter(Boolean);
-function matchWords(target, heard){
-  const T = normW(target), H = normW(heard);
-  const dp = Array.from({length:T.length+1},()=>new Array(H.length+1).fill(0));
-  for (let i=T.length-1;i>=0;i--) for (let j=H.length-1;j>=0;j--) dp[i][j] = T[i]===H[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]);
-  const ok = new Array(T.length).fill(false); let i=0,j=0;
-  while(i<T.length && j<H.length){ if(T[i]===H[j]){ ok[i]=true; i++; j++; } else if (dp[i+1][j]>=dp[i][j+1]) i++; else j++; }
-  const hit = ok.filter(Boolean).length;
-  return { words:T, ok, score: T.length ? Math.round(hit/T.length*100) : 0 };
+/* ============ 음성인식 (v2: 실시간 표시 · 무음 자동 종료 · 숫자/이름 보정) ============ */
+const ONES = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+const TENS = ["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+function numWords(n){
+  n = Math.floor(n); if (n<20) return ONES[n];
+  if (n<100) return TENS[Math.floor(n/10)] + (n%10 ? " "+ONES[n%10] : "");
+  if (n<1000) return ONES[Math.floor(n/100)]+" hundred"+(n%100 ? " "+numWords(n%100) : "");
+  if (n<1000000) return numWords(Math.floor(n/1000))+" thousand"+(n%1000 ? " "+numWords(n%1000) : "");
+  return String(n);
 }
-let recActive = null;
+const ORD = {one:"first",two:"second",three:"third",five:"fifth",eight:"eighth",nine:"ninth",twelve:"twelfth"};
+function ordWords(n){ const w = numWords(n).split(" "); const last = w.pop(); w.push(ORD[last] || (last.endsWith("y") ? last.slice(0,-1)+"ieth" : last+"th")); return w.join(" "); }
+function normText(t){
+  return String(t).toLowerCase().replace(/[’‘`]/g,"'")
+    .replace(/\b(\d{1,2}):(\d{2})\b/g,(m,h,mm)=>numWords(+h)+" "+(mm==="00"?"":(+mm<10?"oh "+numWords(+mm):numWords(+mm))))
+    .replace(/\$\s?(\d[\d,]*)(\.\d+)?/g,(m,a)=>numWords(+a.replace(/,/g,""))+" dollars")
+    .replace(/(\d[\d,]*)\s?%/g,(m,a)=>numWords(+a.replace(/,/g,""))+" percent")
+    .replace(/\b(\d+)(st|nd|rd|th)\b/g,(m,a)=>ordWords(+a))
+    .replace(/\b\d[\d,]*\b/g,m=>numWords(+m.replace(/,/g,"")))
+    .replace(/\ba\.?m\.?(?=\s|$|[,.!?])/g,"am").replace(/\bp\.?m\.?(?=\s|$|[,.!?])/g,"pm")
+    .replace(/\bokay\b/g,"ok").replace(/\bo\.k\.?/g,"ok").replace(/\bdollar\b/g,"dollars")
+    .replace(/n't\b/g," not").replace(/\bcan not\b/g,"cannot").replace(/'m\b/g," am").replace(/'re\b/g," are").replace(/'s\b/g," is").replace(/'ll\b/g," will").replace(/'d\b/g," would").replace(/'ve\b/g," have")
+    .replace(/-/g," ").replace(/[^a-z0-9' ]/g," ").replace(/'/g,"");
+}
+const normW = t => normText(t).split(/\s+/).filter(Boolean);
+function lev(a,b){ const m=a.length,n=b.length; if(!m) return n; if(!n) return m; let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){ const c=[i]; for(let j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1)); p=c; } return p[n]; }
+function nameWords(){ const me = (typeof P!=="undefined" && P.me) || {}; return new Set(normW([me.first,me.last,me.co].filter(Boolean).join(" "))); }
+function matchWords(target, heard){
+  const T = normW(target), H = normW(heard), names = nameWords();
+  // 원문 대문자(고유명사) 위치 표시
+  const raw = String(target).replace(/-/g," ").split(/\s+/).filter(Boolean);
+  const proper = new Set(raw.slice(1).filter(w=>/^[A-Z][a-z]/.test(w)).map(w=>normW(w)[0]).filter(Boolean));
+  const eq = (t,h) => t===h || (t.length>=5 && lev(t,h)<=1) || ((proper.has(t)||names.has(t)) && t.length>=4 && lev(t,h)<=2);
+  const dp = Array.from({length:T.length+1},()=>new Array(H.length+1).fill(0));
+  for (let i=T.length-1;i>=0;i--) for (let j=H.length-1;j>=0;j--) dp[i][j] = eq(T[i],H[j]) ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  const ok = new Array(T.length).fill(false); let i=0,j=0;
+  while(i<T.length && j<H.length){ if(eq(T[i],H[j])){ ok[i]=true; i++; j++; } else if (dp[i+1][j]>=dp[i][j+1]) i++; else j++; }
+  // 붙여 읽기 보정: "river side" ↔ "riverside"
+  const hj = H.join("");
+  T.forEach((t,k)=>{ if(!ok[k] && t.length>=6 && hj.includes(t)) ok[k]=true; });
+  // 내 이름·회사명은 인식이 어려워 채점에서 제외(자동 인정)
+  T.forEach((t,k)=>{ if(!ok[k] && names.has(t)) ok[k]=true; });
+  const hit = ok.filter(Boolean).length;
+  const score = T.length ? Math.round(hit/T.length*100) : 0;
+  // 음성인식이 자주 놓치는 기능어(a, the, would 등)는 관대하게, 핵심 단어를 놓치면 통과 기준을 높임
+  const keyMiss = T.filter((t,k)=>!ok[k] && !FUNC.has(t));
+  const pass = keyMiss.length ? score >= 90 : score >= 70;
+  return { words:T, ok, score, pass, keyMiss };
+}
+const FUNC = new Set("a an the to of in on at for and or but it is am are was were be do does did will would can could should have has had i you we he she they my your our me us this that there so".split(" "));
+let recActive = null, recTimers = [], recStopReq = null;
+function clearRecTimers(){ recTimers.forEach(clearTimeout); recTimers = []; }
+function srButton(state){
+  const b = document.getElementById("srBtn"); if (!b) return;
+  if (state==="on"){ b.textContent = "듣는 중… 다 말하면 여기를 눌러 채점"; b.classList.add("listening"); }
+  else if (state==="wait"){ b.textContent = "마이크 준비 중…"; b.classList.add("listening"); }
+  else { b.textContent = "🎤 말하고 발음 확인"; b.classList.remove("listening"); }
+}
 function startListen(){
   if (!SR || !cur) return;
-  if (recActive){ try{ recActive.abort(); }catch(e){} recActive=null; }
+  if (recActive){ if (recStopReq) recStopReq(); return; }   // 듣는 중에 다시 누르면 바로 채점
   stopSpeak();
   const mine = cur.l.lines.filter(x=>x.s==="B"); const k = Math.min(cur.sh, mine.length-1); const target = mine[k].en;
-  const btn = document.getElementById("srBtn"), out = document.getElementById("srRes");
-  const rec = new SR(); recActive = rec;
-  rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
-  if (btn){ btn.textContent = "듣는 중… 지금 말하세요"; btn.classList.add("listening"); }
-  let got = false;
-  rec.onresult = ev => {
-    got = true;
-    const alts = Array.from(ev.results[0]||[]).map(a=>a.transcript);
-    let best = null, heard = "";
-    for (const h of alts){ const m = matchWords(target, h); if (!best || m.score > best.score){ best = m; heard = h; } }
-    if (!best) return;
-    const pass = best.score >= 80;
-    if (pass){ cur.reps[k] = Math.min(3, (cur.reps[k]||0)+1); }
-    const wordsHtml = best.words.map((w,i)=>`<span class="${best.ok[i]?"ok":"miss"}">${esc(w)}</span>`).join(" ");
-    const html = `<div class="fb ${pass?"good":"bad"}" style="margin-top:4px"><b>일치율 ${best.score}% ${pass?"· 통과 (+1)":"· 80% 이상이면 통과"}</b>인식된 말: “${esc(heard)}”</div><div class="sr-words" style="margin-top:8px">${wordsHtml}</div><div class="note">초록색은 인식된 단어, 빨간 밑줄은 인식되지 않은 단어입니다.</div>`;
-    const y = window.scrollY; renderLesson(); window.scrollTo(0,y);
-    const o2 = document.getElementById("srRes"); if (o2) o2.innerHTML = html;
-    if (pass && (cur.reps[k]||0) >= 3 && k < mine.length-1) toast("이 문장 완료. ‘다음 문장’으로 넘어가세요.");
-  };
-  rec.onerror = ev => {
-    const msg = ev.error==="not-allowed" || ev.error==="service-not-allowed" ? "마이크 권한이 꺼져 있습니다. 아이폰 설정 → Safari → 마이크(또는 설정 → 개인정보 보호 → 마이크, 음성 인식)에서 허용해 주세요."
-      : ev.error==="no-speech" ? "소리가 들리지 않았습니다. 버튼을 누르고 바로 말해보세요."
-      : "음성인식을 하지 못했습니다 ("+ev.error+"). 인터넷 연결을 확인하거나 직접 체크를 눌러주세요.";
-    if (out) out.innerHTML = `<div class="fb bad" style="margin-top:4px">${esc(msg)}</div>`;
-  };
-  rec.onend = () => { recActive = null; const b2=document.getElementById("srBtn"); if (b2 && !got){ b2.textContent="🎤 말하고 발음 확인"; b2.classList.remove("listening"); } };
-  try { rec.start(); } catch(e){ if (out) out.innerHTML = `<div class="fb bad">음성인식을 시작하지 못했습니다. 잠시 후 다시 눌러주세요.</div>`; }
+  const out = () => document.getElementById("srRes");
+  const show = h => { const o = out(); if (o) o.innerHTML = h; };
+  srButton("wait");
+  // 음성 재생 직후 마이크를 바로 열면 iOS에서 실패하는 경우가 있어 잠깐 대기
+  setTimeout(()=>{
+    if (!cur) return;
+    const rec = new SR(); recActive = rec;
+    rec.lang = "en-US"; rec.interimResults = true; rec.maxAlternatives = 3; rec.continuous = true;
+    let finals = [], interim = [], lastAlts = [], heardAny = false, done = false, userAbort = false;
+    const texts = () => { const base = finals.join(" "); const alts = (lastAlts.length ? lastAlts : [interim.join(" ")]);
+      return alts.map(a => (base+" "+a).trim()).filter(Boolean); };
+    const finish = () => {
+      if (done) return; done = true; clearRecTimers(); recStopReq = null;
+      try { rec.stop(); } catch(e){}
+      recActive = null; srButton("off");
+      const cands = texts();
+      if (!cands.length){ if (!userAbort) show(`<div class="fb bad" style="margin-top:4px"><b>말소리가 인식되지 않았습니다</b>버튼을 누르고 ‘듣는 중’이 보이면 바로, 평소보다 조금 크게 말해 보세요. 주변이 시끄러우면 휴대폰을 입 가까이 대 주세요.</div>`); return; }
+      let best = null, heard = "";
+      for (const h of cands){ const m = matchWords(target, h); if (!best || m.score > best.score){ best = m; heard = h; } }
+      const pass = best.pass;
+      if (pass){ cur.reps[k] = Math.min(3, (cur.reps[k]||0)+1); }
+      const missed = best.words.filter((w,i)=>!best.ok[i]);
+      const wordsHtml = best.words.map((w,i)=>`<span class="${best.ok[i]?"ok":"miss"}">${esc(w)}</span>`).join(" ");
+      const tip = pass ? (missed.length ? `거의 정확합니다. 밑줄 단어만 한 번 더 들어 보세요.` : `아주 정확합니다.`)
+        : best.keyMiss.length && best.score >= 50 ? `핵심 단어 ‘${esc(best.keyMiss.join(", "))}’가 인식되지 않았습니다. ‘느리게’로 듣고 그 단어를 또박또박 말해 보세요.`
+        : best.score >= 50 ? `빨간 밑줄 단어가 인식되지 않았습니다. ‘느리게’로 듣고 그 단어를 또박또박 말해 보세요.`
+        : `대부분 인식되지 않았습니다. 문장을 끝까지 한 번에, 조금 천천히 말해 보세요.`;
+      const html = `<div class="fb ${pass?"good":"bad"}" style="margin-top:4px"><b>일치율 ${best.score}% ${pass?"· 통과 (+1)":best.keyMiss.length?"· 핵심 단어를 다시 말해 보세요":"· 조금 더 정확하게"}</b>인식된 말: “${esc(heard)}”<br>${tip}</div>
+        <div class="sr-words" style="margin-top:8px;font-size:17px;line-height:1.6">${wordsHtml}</div>
+        ${missed.length ? `<button class="btn soft block" style="margin-top:8px" data-act="sayText" data-t="${esc(missed.join(", "))}" data-r="0.7">${PLAY} 놓친 단어 느리게 듣기</button>` : ""}`;
+      const y = window.scrollY; renderLesson(); window.scrollTo(0,y); show(html);
+      if (pass && (cur.reps[k]||0) >= 3 && k < mine.length-1) toast("이 문장 완료. ‘다음 문장’으로 넘어가세요.");
+    };
+    recStopReq = finish;
+    const armSilence = () => { clearRecTimers();
+      recTimers.push(setTimeout(finish, 1500));        // 말이 멈추고 1.5초 뒤 자동 채점
+      recTimers.push(setTimeout(finish, 15000)); };    // 최대 15초
+    rec.onstart = () => { srButton("on"); show(`<div class="muted" style="margin-top:6px">지금 말하세요. 말이 끝나면 자동으로 채점됩니다.</div>`);
+      recTimers.push(setTimeout(()=>{ if (!heardAny) finish(); }, 7000)); };
+    rec.onresult = ev => {
+      heardAny = true;
+      const all = Array.from(ev.results);
+      finals = all.slice(0,-1).map(r=>r[0].transcript);
+      const last = all[all.length-1];
+      lastAlts = last ? Array.from(last).map(a=>a.transcript) : [];
+      interim = [];
+      const now = texts()[0] || "";
+      const m = matchWords(target, now);
+      show(`<div class="muted" style="margin-top:6px">들리는 말: “${esc(now)}”</div><div class="sr-words" style="margin-top:6px;font-size:17px;line-height:1.6">${m.words.map((w,i)=>`<span class="${m.ok[i]?"ok":""}">${esc(w)}</span>`).join(" ")}</div>`);
+      if (m.score === 100) { clearRecTimers(); recTimers.push(setTimeout(finish, 400)); return; }  // 전부 맞으면 바로 채점
+      armSilence();
+    };
+    rec.onerror = ev => {
+      if (ev.error === "aborted"){ userAbort = true; return; }
+      if (ev.error === "no-speech"){ return; }  // onend에서 안내
+      clearRecTimers(); done = true; recActive = null; recStopReq = null; srButton("off");
+      const msg = ev.error==="not-allowed" || ev.error==="service-not-allowed" ? "마이크 또는 음성 인식 권한이 꺼져 있습니다. 아이폰 설정 → 개인정보 보호 및 보안 → 마이크 / 음성 인식에서 Safari를 켜 주세요."
+        : ev.error==="audio-capture" ? "마이크를 사용할 수 없습니다. 통화 중이거나 다른 앱이 마이크를 쓰고 있는지 확인해 주세요."
+        : ev.error==="network" ? "인터넷 연결이 불안정해 음성인식을 하지 못했습니다. 와이파이나 LTE 연결을 확인해 주세요."
+        : "음성인식을 하지 못했습니다 ("+ev.error+"). 다시 누르거나 ‘직접 체크’를 사용해 주세요.";
+      show(`<div class="fb bad" style="margin-top:4px">${esc(msg)}</div>`);
+    };
+    rec.onend = () => { if (!done) finish(); };
+    try { rec.start(); } catch(e){ recActive = null; recStopReq = null; srButton("off"); show(`<div class="fb bad">음성인식을 시작하지 못했습니다. 잠시 후 다시 눌러주세요.</div>`); }
+  }, 250);
 }
 
 /* ============ 백업 ============ */
@@ -730,6 +874,12 @@ function attCard(){
 }
 
 document.addEventListener("change", e=>{
+  if (e.target && (e.target.id==="voiceA" || e.target.id==="voiceB")){
+    P.settings[e.target.id] = e.target.value; save();
+    const role = e.target.id==="voiceA" ? "A" : "B";
+    playSeq([{en: role==="A" ? "Hello. How can I help you today?" : "Hi. I'd like to check in, please.", s: role}]);
+    return;
+  }
   if (e.target && e.target.id==="importFile" && e.target.files && e.target.files[0]){
     const fr = new FileReader(); fr.onload = ()=>{ try{ mergeImport(JSON.parse(fr.result)); }catch(err){ toast("백업 파일 형식이 맞지 않습니다."); } }; fr.readAsText(e.target.files[0]);
   }
@@ -742,6 +892,7 @@ document.addEventListener("click", e=>{
   if (a==="home") return renderHome();
   if (a==="week"){ viewWeek = +b.dataset.w; renderHome(); const el=document.getElementById("weekList"); if (el) el.scrollIntoView({block:"start"}); return; }
   if (a==="weekLocked"){ toast(((+b.dataset.w)-1)+"주차 5과를 모두 마치면 열립니다."); return; }
+  if (a==="wrongReview") return openWrongReview();
   if (a==="rate"){ P.settings.rate = parseFloat(b.dataset.v); save(); return renderHome(); }
   if (a==="dark"){ P.settings.dark = !P.settings.dark; applyMode(); save(); return cur ? renderLessonKeep() : renderHome(); }
   if (a==="listen") return startListen();
@@ -765,12 +916,12 @@ document.addEventListener("click", e=>{
   }
   if (a==="importText"){ try{ mergeImport(JSON.parse(document.getElementById("importText").value)); }catch(e){ toast("백업 코드 형식이 맞지 않습니다."); } return; }
   if (a==="showKo"){ P.settings.showKo = !P.settings.showKo; save(); return renderHome(); }
-  if (a==="testVoice") return playSeq([{en:"Hello! Let's practice English for ten minutes today.", s:"B"}]);
+  if (a==="testVoice") return playSeq([{en:"Hello. How can I help you today?", s:"A"},{en:"Hi. I'd like to practice English for ten minutes.", s:"B"}]);
   if (a==="sayText") return playSeq([{en:b.dataset.t, s:b.dataset.s||"B", key:b.dataset.key}], b.dataset.r?parseFloat(b.dataset.r):undefined);
   if (!cur) return;
   const S = steps();
   if (a==="prev"){ if (cur.step>0){ cur.step--; renderLesson(); } return; }
-  if (a==="next"){ if (cur.step < S.length-1){ cur.step++; renderLesson(); } else finishLesson(); return; }
+  if (a==="next"){ if (cur.step < S.length-1){ cur.step++; renderLesson(); } else if (cur.l.wrongOnly) finishWrongReview(); else finishLesson(); return; }
   if (a==="lessonKo"){ cur.showKo = !cur.showKo; return renderLesson(); }
   if (a==="playAll"){ const r = b.dataset.r?parseFloat(b.dataset.r):undefined; return playSeq(cur.l.lines.map((x,i)=>({en:x.en,s:x.s,key:"L"+i})), r); }
   if (a==="say"){ const i=+b.dataset.i; const x=cur.l.lines[i]; return playSeq([{en:x.en,s:x.s,key:"L"+i}]); }
