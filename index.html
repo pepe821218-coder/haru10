@@ -299,8 +299,37 @@ function pickVoice(role){
   if (role !== "A") return me;
   return pool.find(v=>baseName(v)!==baseName(me)) || me;
 }
-function stopSpeak(){ if (typeof recActive!=="undefined" && recActive){ try{ recActive.abort(); }catch(e){} } playToken++; if (hasTTS) speechSynthesis.cancel(); markPlaying(null); }
-function speakOne(text, role, rate){
+/* ===== AI 원어민 음성(미리 만든 녹음) — 없으면 아이폰 음성으로 대체. 예문 글자는 바뀌지 않음 ===== */
+const AUD = {A:{}, B:{}}, audLoaded = {};
+function loadAudio(week){
+  if (audLoaded[week]) return audLoaded[week];
+  audLoaded[week] = fetch("audio/w"+pad2(week)+".json").then(r=>r.ok?r.json():null).then(j=>{ if(j){ Object.assign(AUD.A, j.A||{}); Object.assign(AUD.B, j.B||{}); } }).catch(()=>{ delete audLoaded[week]; });
+  return audLoaded[week];
+}
+const aiOn = () => P.settings.aiVoice !== false;
+let audioEl = null, audioStop = null;
+function clipFor(text, role){ const t = String(text).trim(); return (role==="A" ? AUD.A[t] : AUD.B[t]) || null; }
+function playClip(b64, rate){
+  return new Promise(res=>{
+    if (!audioEl){ audioEl = new Audio(); audioEl.preload = "auto"; }
+    let done = false; const fin = ok=>{ if(!done){ done=true; audioStop=null; clearTimeout(tm); res(ok); } };
+    audioStop = ()=>{ try{ audioEl.pause(); }catch(e){} fin(true); };
+    const r = rate || P.settings.rate || 1;
+    audioEl.onended = ()=>fin(true); audioEl.onerror = ()=>fin(false);
+    audioEl.onloadedmetadata = ()=>{ audioEl.playbackRate = r; };
+    audioEl.src = "data:audio/mpeg;base64," + b64;
+    audioEl.preservesPitch = true; audioEl.webkitPreservesPitch = true; audioEl.playbackRate = r;
+    const tm = setTimeout(()=>fin(true), 20000);
+    const p = audioEl.play(); if (p && p.catch) p.catch(()=>fin(false));
+  });
+}
+function stopSpeak(){ if (typeof recActive!=="undefined" && recActive){ try{ recActive.abort(); }catch(e){} } playToken++; if (audioStop) audioStop(); if (hasTTS) speechSynthesis.cancel(); markPlaying(null); }
+async function speakOne(text, role, rate){
+  const clip = aiOn() ? clipFor(text, role) : null;
+  if (clip){ const ok = await playClip(clip, rate); if (ok) return; }
+  return speakTTS(text, role, rate);
+}
+function speakTTS(text, role, rate){
   return new Promise(res=>{
     if (!hasTTS){ res(); return; }
     const u = new SpeechSynthesisUtterance(text);
@@ -314,7 +343,7 @@ function speakOne(text, role, rate){
   });
 }
 async function playSeq(items, rate){
-  if (!hasTTS){ toast("이 브라우저는 음성 재생을 지원하지 않습니다."); return; }
+  if (!hasTTS && !items.some(it=>aiOn() && clipFor(it.en, it.s))){ toast("이 브라우저는 음성 재생을 지원하지 않습니다."); return; }
   stopSpeak(); const t = playToken;
   for (const it of items){
     if (t !== playToken) return;
@@ -445,7 +474,9 @@ function renderHome(){
           <button class="switch" role="switch" aria-label="다크 모드" aria-checked="${P.settings.dark}" data-act="dark"></button></div>
         <div class="row between"><div><div style="font-weight:600">한글 해석 기본 표시</div><div class="note">익숙해지면 끄고 들어보세요</div></div>
           <button class="switch" role="switch" aria-label="한글 해석 기본 표시" aria-checked="${P.settings.showKo}" data-act="showKo"></button></div>
-        ${hasTTS ? voicePickerHtml() : ""}
+        <div class="row between"><div><div style="font-weight:600">AI 원어민 음성 (권장)</div><div class="note">상대방: 미국 여성 · 나: 영국 남성. 끄면 아이폰 음성으로 읽습니다</div></div>
+          <button class="switch" role="switch" aria-label="AI 원어민 음성" aria-checked="${aiOn()}" data-act="aiVoice"></button></div>
+        ${hasTTS ? `<div class="note" style="margin-top:-4px">${aiOn()?"아래 아이폰 음성은 AI 음성이 없는 문장(이름을 바꾼 문장 등)에만 쓰입니다.":""}</div>`+voicePickerHtml() : ""}
         <button class="btn ghost block" data-act="testVoice">${PLAY} 음성 테스트 (대화 두 줄)</button>
         <div class="note">${hasTTS ? "휴대폰에 설치된 영어 음성으로 읽어줍니다. 소리가 안 나면 무음 모드를 확인하세요." : "이 브라우저는 음성 재생을 지원하지 않습니다. 크롬이나 사파리로 열어주세요."}<br>${SR ? "따라 말하기에서 🎤 버튼을 누르면 발음을 글자로 인식해 정답과 비교합니다. 처음 한 번 마이크 권한을 허용해 주세요." : "이 폰에서는 음성인식을 쓸 수 없어서, 따라 말하기는 소리 내어 말한 뒤 직접 체크하는 방식입니다."}<br>학습 기록은 이 아이폰 안에만 저장됩니다. 가끔 아래에서 백업 파일을 저장해 두세요.</div>
       </div>
@@ -481,6 +512,7 @@ const STEPS_R = [ ["표현 카드",3],["복습 퀴즈",4] ];
 
 function openLesson(id){
   const l = allItems().find(x=>x.id===id); if (!l) return;
+  loadAudio(l.week); if (W(l.week+1)) setTimeout(()=>loadAudio(l.week+1), 3000);
   if (!weekUnlocked(l.week)){ toast((l.week-1)+"주차 5과를 모두 마치면 열립니다."); return; }
   let quiz;
   if (l.review){
@@ -916,6 +948,7 @@ document.addEventListener("click", e=>{
     return;
   }
   if (a==="importText"){ try{ mergeImport(JSON.parse(document.getElementById("importText").value)); }catch(e){ toast("백업 코드 형식이 맞지 않습니다."); } return; }
+  if (a==="aiVoice"){ P.settings.aiVoice = !aiOn(); save(); return renderHomeKeep(); }
   if (a==="showKo"){ P.settings.showKo = !P.settings.showKo; save(); return renderHomeKeep(); }
   if (a==="testVoice") return playSeq([{en:"Hello. How can I help you today?", s:"A"},{en:"Hi. I'd like to practice English for ten minutes.", s:"B"}]);
   if (a==="sayText") return playSeq([{en:b.dataset.t, s:b.dataset.s||"B", key:b.dataset.key}], b.dataset.r?parseFloat(b.dataset.r):undefined);
@@ -942,6 +975,7 @@ function scrollEnd(){ requestAnimationFrame(()=>window.scrollTo({top:document.bo
 
 /* 역할극 첫 진입 시 A 대사 자동 재생은 하지 않음(모바일은 터치 후에만 소리 가능). */
 renderHome();
+loadAudio(0); try{ loadAudio(currentWeek()); }catch(e){}
 if ("serviceWorker" in navigator){ window.addEventListener("load", ()=>{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }); }
 </script>
 
